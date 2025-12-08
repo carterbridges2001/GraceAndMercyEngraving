@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breeders Program - Ruminary Exchange</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .breeders-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1500595046743-cd271d694d30?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80') no-repeat center center/cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            margin-top: 60px;
+            position: relative;
+        }
+
+        .breeders-hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .breeders-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .breeders-hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .verification-steps {
+            padding: 80px 0;
+            background-color: #f9f9f9;
+        }
+
+        .step {
+            display: flex;
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            width: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            padding: 30px;
+        }
+
+        .step h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .benefits {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .benefit-card {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .cta-breeders {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .cta-breeders .btn {
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">RUMINARY</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="browse.html">Browse Goats</a>
+                <a href="breeders.html" class="active">For Breeders</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <span id="userGreeting"></span>
+                    <div class="user-dropdown">
+                        <a href="account.html">My Account</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+                <a href="login.html" id="loginBtn" class="btn btn-outline">Login</a>
+                <a href="browse.html" class="btn btn-primary">Shop Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="breeders-hero">
+        <div class="breeders-hero-content">
+            <h1>Join Our Premium Breeders Network</h1>
+            <p>Connect with serious buyers and get the best value for your premium goats through our trusted marketplace.</p>
+            <a href="#apply" class="btn btn-primary">Apply to Sell</a>
+        </div>
+    </section>
+
+    <!-- Verification Process -->
+    <section class="verification-steps">
+        <div class="container">
+            <h2 class="section-title">Our Verification Process</h2>
+            <p class="section-subtitle">We maintain the highest standards to ensure quality and trust in our marketplace</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Initial Application</h3>
+                    <p>Complete our detailed application form with information about your breeding program, facilities, and experience. This helps us understand your operation and ensure it meets our standards.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Facility Review</h3>
+                    <p>Our team will review your facilities through photos, videos, and possibly a virtual tour. We look for clean, humane conditions that prioritize animal welfare.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Health & Breeding Records</h3>
+                    <p>Submit health records, vaccination history, and breeding documentation. We verify all documentation with your veterinarian and breeding associations.</p>
+                </div>
+            </div>
+
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <h3>Reference Check</h3>
+                    <p>We'll contact your professional references, including veterinarians, other breeders, and potentially previous buyers to verify your reputation and practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits -->
+    <section class="benefits">
+        <div class="container">
+            <h2 class="section-title">Benefits for Verified Breeders</h2>
+            <p class="section-subtitle">Why join the Ruminary Exchange network?</p>
+            
+            <div class="benefits-grid">
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Premium Marketplace</h3>
+                    <p>Access to serious buyers specifically looking for quality breeding stock and premium goats.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h3>Better Pricing</h3>
+                    <p>Our platform helps you get the true value for your animals with our auction and direct sale options.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Verified Badge</h3>
+                    <p>Stand out with a verified breeder badge that builds trust with potential buyers.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Market Insights</h3>
+                    <p>Access to market data and trends to help you make informed breeding decisions.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                    <h3>Live Auctions</h3>
+                    <p>Reach more buyers and create competition with our live auction platform.</p>
+                </div>
+
+                <div class="benefit-card">
+                    <div class="benefit-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>Dedicated Support</h3>
+                    <p>Priority customer support to help you with listings, sales, and any questions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-breeders" id="apply">
+        <div class="container">
+            <h2>Ready to Join Our Network?</h2>
+            <p>Become a verified breeder on Ruminary Exchange and start connecting with serious buyers today.</p>
+            <a href="register.html" class="btn btn-primary">Apply Now</a>
+            <a href="contact.html" class="btn btn-outline">Contact Us</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>RUMINARY EXCHANGE</h3>
+                    <p>Your trusted marketplace for premium goats and livestock. Connecting breeders and enthusiasts since 2025.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse Goats</a></li>
+                        <li><a href="breeders.html">For Breeders</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p><i class="fas fa-envelope"></i> info@ruminaryexchange.com</p>
+                    <p><i class="fas fa-phone"></i> (555) 123-4567</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Farm Road, Goatville, TX 78901</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Ruminary Exchange. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script>
+        // Check if user is logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication status
+            firebase.auth().onAuthStateChanged(function(user) {
+                if (user) {
+                    // User is signed in
+                    document.body.classList.add('logged-in');
+                    document.getElementById('userGreeting').textContent = user.displayName || 'My Account';
+                    document.getElementById('userProfile').style.display = 'block';
+                    document.getElementById('loginBtn').style.display = 'none';
+                } else {
+                    // User is signed out
+                    document.body.classList.remove('logged-in');
+                    document.getElementById('userProfile').style.display = 'none';
+                    document.getElementById('loginBtn').style.display = 'inline-block';
+                }
+            });
+
+            // Logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                firebase.auth().signOut().then(() => {
+                    window.location.href = 'index.html';
+                }).catch((error) => {
+                    console.error('Logout Error:', error);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

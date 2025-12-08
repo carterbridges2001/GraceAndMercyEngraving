@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account - RUMINARY EXCHANGE</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    <style>
+        .account-container {
+            max-width: 1200px;
+            margin: 6rem auto 2rem auto;
+            padding: 0 1rem;
+        }
+        .account-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .profile-avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-right: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .avatar-initials {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background-color: #4f46e5;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 2rem;
+            border: 3px solid #4f46e5;
+        }
+        .profile-info h1 {
+            margin: 0 0 0.5rem;
+            color: #1f2937;
+        }
+        .profile-email {
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+        }
+        .account-sections {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        .account-sidebar {
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        .account-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .account-nav li {
+            margin-bottom: 0.5rem;
+        }
+        .account-nav a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: #4b5563;
+            text-decoration: none;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        .account-nav a:hover, .account-nav a.active {
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+        .account-content {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0.5rem 0;
+        }
+        .stat-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        .btn-edit {
+            background: #eef2ff;
+            color: #4f46e5;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        .btn-edit:hover {
+            background: #e0e7ff;
+        }
+        .recent-activity {
+            margin-top: 2rem;
+        }
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: #4f46e5;
+        }
+        .activity-details {
+            flex: 1;
+        }
+        .activity-title {
+            font-weight: 500;
+            margin: 0 0 0.25rem;
+            color: #1f2937;
+        }
+        .activity-time {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        .btn-edit-avatar {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s ease;
+        }
+        .btn-edit-avatar:hover {
+            background-color: #4338ca;
+            transform: scale(1.1);
+        }
+        .btn-edit-avatar:disabled {
+            background-color: #a5b4fc;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">RUMINARY EXCHANGE</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="browse.html">Browse Goats</a>
+                <a href="notifications.html">Notifications</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <span id="userGreeting"></span>
+                    <div class="user-dropdown">
+                        <a href="account.html">My Account</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+                <a href="login.html" id="loginBtn" class="btn btn-outline">Login</a>
+                <a href="create-listing.html" class="btn btn-primary">Sell a Goat</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Firebase SDKs (if not already loaded) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Firebase variables are already initialized in the included scripts
+        // Check auth state on page load
+        firebase.auth().onAuthStateChanged((user) => {
+            const userProfile = document.getElementById('userProfile');
+            const loginBtn = document.getElementById('loginBtn');
+            const userGreeting = document.getElementById('userGreeting');
+            
+            if (user) {
+                // User is signed in
+                document.body.classList.add('logged-in');
+                if (userProfile) userProfile.style.display = 'block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (userGreeting) {
+                    userGreeting.textContent = user.displayName || user.email.split('@')[0];
+                }
+            } else {
+                // User is signed out
+                document.body.classList.remove('logged-in');
+                if (userProfile) userProfile.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+            }
+        });
+        
+        // Handle logout
+        document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                console.error('Logout error:', error);
+            });
+        });
+    </script>
+
+    <!-- Account Content -->
+    <div class="container account-container">
+        <div class="account-header">
+            <div class="profile-avatar-container">
+                <div class="avatar-initials" id="userInitials">
+                    <!-- Initials will be set by JavaScript -->
+                </div>
+                <button class="btn-edit-avatar" title="Change Photo" id="uploadAvatarBtn">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <input type="file" id="uploadAvatar" accept="image/*" style="display: none;">
+            </div>
+            <div class="profile-info">
+                <div class="profile-header">
+                    <h1 id="profileName">Loading...</h1>
+                    <span class="member-since" id="memberSince">Member since <span id="joinDate">2023</span></span>
+                </div>
+                <p class="profile-email" id="userEmail">Loading email...</p>
+                <div class="profile-actions">
+                    <button class="btn-edit" id="editProfileBtn">
+                        <i class="fas fa-edit"></i> Edit Profile
+                    </button>
+                    <button class="btn-edit" id="upgradeAccountBtn">
+                        <i class="fas fa-star"></i> Upgrade Account
+                    </button>
+                </div>
+                <div class="profile-completion">
+                    <div class="completion-header">
+                        <span>Profile Completion</span>
+                        <span class="completion-percent" id="profileCompletion">60%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress" style="width: 60%;"></div>
+                    </div>
+                    <p class="completion-hint">Complete your profile to unlock all features</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="account-sections">
+            <div class="account-sidebar">
+                <ul class="account-nav nav flex-column" id="accountNav">
+                    <li class="nav-item">
+                        <a href="account.html" class="nav-link active">
+                            <i class="fas fa-user me-2"></i> Profile Overview
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="purchases.html" class="nav-link">
+                            <i class="fas fa-shopping-bag me-2"></i> My Purchases 
+                            <span id="purchasesCount" class="badge bg-secondary ms-auto">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="my-listings.html" class="nav-link">
+                            <i class="fas fa-tag me-2"></i> My Listings 
+                            <span id="listingsCount" class="badge bg-secondary ms-auto">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="saved-items.html" class="nav-link">
+                            <i class="fas fa-heart me-2"></i> Saved Items 
+                            <span id="savedCount" class="badge bg-secondary ms-auto">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="payment-methods.html" class="nav-link">
+                            <i class="fas fa-credit-card me-2"></i> Payment Methods
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="account-settings.html" class="nav-link">
+                            <i class="fas fa-cog me-2"></i> Account Settings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="notifications.html" class="nav-link">
+                            <i class="fas fa-bell me-2"></i> Notifications 
+                            <span id="notificationsCount" class="badge bg-primary ms-auto">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="help-center.html" class="nav-link">
+                            <i class="fas fa-question-circle me-2"></i> Help & Support
+                        </a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <button id="logoutBtn" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="account-upgrade">
+                    <h4>Upgrade to Seller Pro</h4>
+                    <p>Get access to premium features and sell more goats!</p>
+                    <button class="btn-upgrade">Upgrade Now</button>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="account-content">
+                <div class="content-header">
+                    <h2 class="section-title">Account Overview</h2>
+                    <div class="header-actions">
+                        <button class="btn-icon" title="Refresh">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                        <button class="btn-icon" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="stat-card stat-primary">
+                        <i class="fas fa-tag"></i>
+                        <div class="stat-details">
+                            <span class="stat-value" id="totalListingsCount">0</span>
+                            <span class="stat-label">Total Listings</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-success">
+                        <i class="fas fa-eye"></i>
+                        <div class="stat-details">
+                            <span class="stat-value" id="totalViewsCount">0</span>
+                            <span class="stat-label">Total Views</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-warning">
+                        <i class="fas fa-star"></i>
+                        <div class="stat-details">
+                            <span class="stat-value" id="sellerRating">0.0</span>
+                            <span class="stat-label">Seller Rating</span>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-info">
+                        <i class="fas fa-gift"></i>
+                        <div class="stat-details">
+                            <span class="stat-value" id="activeListingsCount">0</span>
+                            <span class="stat-label">Active Listings</span>
+                        </div>
+                    </div>
+                </div>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <!-- My Listings Section -->
+                <div class="listings-section">
+                    <div class="section-header">
+                        <h3 class="section-title">My Goat Listings</h3>
+                        <a href="create-listing.html" class="btn-primary">
+                            <i class="fas fa-plus"></i> Add New Listing
+                        </a>
+                    </div>
+                    
+                    <!-- Search and Filter -->
+                    <div class="listings-toolbar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchListings" placeholder="Search your listings...">
+                        </div>
+                        <div class="filter-dropdown">
+                            <select id="filterStatus">
+                                <option value="all">All Listings</option>
+                                <option value="active">Active</option>
+                                <option value="sold">Sold</option>
+                                <option value="draft">Draft</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Listings Grid -->
+                    <div class="listings-grid" id="listingsGrid">
+                        <!-- Listings will be dynamically inserted here -->
+                        <div class="loading-spinner">
+                            <i class="fas fa-spinner fa-spin"></i> Loading your listings...
+                        </div>
+                    </div>
+                    
+                    <!-- No Listings Message (hidden by default) -->
+                    <div class="no-listings" id="noListings" style="display: none;">
+                        <i class="fas fa-kiwi-bird"></i>
+                        <h4>No Listings Found</h4>
+                        <p>You haven't listed any goats for sale yet.</p>
+                        <a href="create-listing.html" class="btn-primary">Create Your First Listing</a>
+                    </div>
+                </div>
+                
+                <style>
+                    .listings-section {
+                        margin-top: 2rem;
+                        background: white;
+                        border-radius: 0.5rem;
+                        padding: 2rem;
+                        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+                    }
+                    
+                    .listings-toolbar {
+                        display: flex;
+                        justify-content: space-between;
+                        margin-bottom: 1.5rem;
+                        gap: 1rem;
+                    }
+                    
+                    .search-box {
+                        flex: 1;
+                        position: relative;
+                        max-width: 400px;
+                    }
+                    
+                    .search-box i {
+                        position: absolute;
+                        left: 12px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        color: #9ca3af;
+                    }
+                    
+                    .search-box input {
+                        width: 100%;
+                        padding: 0.5rem 1rem 0.5rem 2.5rem;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 0.375rem;
+                        font-size: 0.875rem;
+                    }
+                    
+                    .filter-dropdown select {
+                        padding: 0.5rem 2rem 0.5rem 1rem;
+                        border: 1px solid #e5e7eb;
+                        border-radius: 0.375rem;
+                        background-color: white;
+                        font-size: 0.875rem;
+                        cursor: pointer;
+                        appearance: none;
+                        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+                        background-repeat: no-repeat;
+                        background-position: right 0.5rem center;
+                        background-size: 1em;
+                    }
+                    
+                    .listings-grid {
+                        display: grid;
+                        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                        gap: 1.5rem;
+                        margin-top: 1rem;
+                    }
+                    
+                    .listing-card {
+                        border: 1px solid #e5e7eb;
+                        border-radius: 0.5rem;
+                        overflow: hidden;
+                        transition: all 0.2s;
+                    }
+                    
+                    .listing-card:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                    }
+                    
+                    .listing-image {
+                        height: 180px;
+                        background-color: #f3f4f6;
+                        background-size: cover;
+                        background-position: center;
+                        position: relative;
+                    }
+                    
+                    .listing-status {
+                        position: absolute;
+                        top: 0.5rem;
+                        right: 0.5rem;
+                        background: white;
+                        padding: 0.25rem 0.5rem;
+                        border-radius: 1rem;
+                        font-size: 0.75rem;
+                        font-weight: 500;
+                        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                    }
+                    
+                    .status-active {
+                        color: #10b981;
+                    }
+                    
+                    .status-sold {
+                        color: #ef4444;
+                    }
+                    
+                    .status-draft {
+                        color: #6b7280;
+                    }
+                    
+                    .listing-details {
+                        padding: 1.25rem;
+                    }
+                    
+                    .listing-title {
+                        font-size: 1.125rem;
+                        font-weight: 600;
+                        margin: 0 0 0.5rem;
+                        color: #1f2937;
+                    }
+                    
+                    .listing-price {
+                        font-size: 1.25rem;
+                        font-weight: 700;
+                        color: #1f2937;
+                        margin-bottom: 0.75rem;
+                    }
+                    
+                    .listing-meta {
+                        display: flex;
+                        justify-content: space-between;
+                        color: #6b7280;
+                        font-size: 0.875rem;
+                        margin-top: 1rem;
+                        padding-top: 0.75rem;
+                        border-top: 1px solid #f3f4f6;
+                    }
+                    
+                    .listing-actions {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-top: 1rem;
+                    }
+                    
+                    .btn-sm {
+                        padding: 0.375rem 0.75rem;
+                        font-size: 0.75rem;
+                        border-radius: 0.25rem;
+                    }
+                    
+                    .loading-spinner {
+                        grid-column: 1 / -1;
+                        text-align: center;
+                        padding: 2rem;
+                        color: #6b7280;
+                    }
+                    
+                    .no-listings {
+                        text-align: center;
+                        padding: 3rem 1rem;
+                    }
+                    
+                    .no-listings i {
+                        font-size: 3rem;
+                        color: #e5e7eb;
+                        margin-bottom: 1rem;
+                    }
+                    
+                    .no-listings h4 {
+                        margin: 0.5rem 0;
+                        color: #1f2937;
+                    }
+                    
+                    .no-listings p {
+                        color: #6b7280;
+                        margin-bottom: 1.5rem;
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .listings-toolbar {
+                            flex-direction: column;
+                        }
+                        
+                        .search-box {
+                            max-width: 100%;
+                        }
+                        
+                        .filter-dropdown {
+                            align-self: flex-end;
+                        }
+                    }
+                </style>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="goatsListed">0</div>
+                        <div class="stat-label">Goats Listed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="goatsSold">0</div>
+                        <div class="stat-label">Goats Sold</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalEarnings">$0</div>
+                        <div class="stat-label">Total Earnings</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="rating">5.0</div>
+                        <div class="stat-label">Seller Rating</div>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h3 class="section-title">Recent Activity</h3>
+                    <div id="recentActivity">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="activity-details">
+                                <h4 class="activity-title">Account created successfully</h4>
+                                <p class="activity-time">Just now</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    
+    <!-- Your Firebase configuration -->
+    <script>
+        // Only initialize Firebase if it hasn't been initialized yet
+        (function() {
+            // Check if Firebase is already loaded
+            if (typeof firebase === 'undefined') {
+                console.error('Firebase SDK not loaded');
+                return;
+            }
+
+            // Your web app's Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyC7draXchRUCkK1Hut1eD-Km1_Y4f_AtCU",
+                authDomain: "goatique-536bd.firebaseapp.com",
+                projectId: "goatique-536bd",
+                storageBucket: "goatique-536bd.appspot.com",
+                messagingSenderId: "63709506575",
+                appId: "1:63709506575:web:864e9369dcf7021859077a"
+            };
+
+            // Initialize Firebase only once
+            try {
+                let app;
+                if (!firebase.apps.length) {
+                    app = firebase.initializeApp(firebaseConfig);
+                    console.log('Firebase initialized successfully');
+                } else {
+                    app = firebase.app();
+                    console.log('Using existing Firebase app');
+                }
+                
+                // Initialize services
+                const auth = firebase.auth();
+                const db = firebase.firestore();
+                const storage = firebase.storage();
+                
+                // Enable offline persistence for Firestore
+                db.enablePersistence().catch((err) => {
+                    console.error('Firestore persistence error:', err);
+                });
+                
+                // Make them globally available
+                window.auth = auth;
+                window.db = db;
+                window.storage = storage;
+                
+                console.log('Firebase services initialized');
+                
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                if (error.code === 'app/duplicate-app') {
+                    console.warn('Firebase app already exists');
+                } else {
+                    console.error('Firebase initialization failed:', error);
+                }
+            }
+        })();
+    </script>
+    
+    <!-- Auth Utils -->
+    <script>
+        // Simple auth utilities
+        const authUtils = {
+            getCurrentUser: () => auth.currentUser,
+            isAuthenticated: () => !!auth.currentUser,
+            requireAuth: () => {
+                if (!auth.currentUser) {
+                    window.location.href = 'login.html';
+                    return false;
+                }
+                return true;
+            }
+        };
+        window.authUtils = authUtils;
+    </script>
+    
+    <!-- Application JavaScript -->
+    <script src="js/auth.js"></script>
+    <script src="js/listings.js"></script>
+    <script>
+        // Global variables
+        let currentUser = null;
+        let userData = null;
+        
+        // DOM Elements
+        const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+        const uploadAvatarInput = document.getElementById('uploadAvatar');
+        const userInitials = document.getElementById('userInitials');
+        
+        // Initialize file upload functionality
+        if (uploadAvatarBtn && uploadAvatarInput) {
+            uploadAvatarBtn.addEventListener('click', () => uploadAvatarInput.click());
+            uploadAvatarInput.addEventListener('change', handleAvatarUpload);
+        }
+        
+        // Handle avatar upload
+        async function handleAvatarUpload(event) {
+            console.log('Starting avatar upload process...');
+            const file = event.target.files[0];
+            const uploadAvatarBtn = document.getElementById('uploadAvatarBtn');
+            
+            if (!file) {
+                console.log('No file selected');
+                return;
+            }
+            
+            console.log('Selected file:', file.name, 'size:', file.size, 'type:', file.type);
+            
+            // Check file size (max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                const errorMsg = 'File is too large. Please select an image smaller than 2MB';
+                console.error(errorMsg);
+                alert(errorMsg);
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.match('image/(jpeg|png|jpg|gif)')) {
+                const errorMsg = 'Invalid file type. Please select a valid image file (JPEG, PNG, GIF)';
+                console.error(errorMsg);
+                alert(errorMsg);
+                return;
+            }
+            
+            try {
+                // Show loading state
+                console.log('Starting upload...');
+                if (uploadAvatarBtn) {
+                    uploadAvatarBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                    uploadAvatarBtn.disabled = true;
+                }
+                
+                // Get current user
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('No authenticated user found');
+                }
+                
+                // Create a reference to the storage location
+                const storageRef = storage.ref();
+                const fileExt = file.name.split('.').pop();
+                const fileName = `avatar_${Date.now()}.${fileExt}`;
+                const fileRef = storageRef.child(`profilePictures/${user.uid}/${fileName}`);
+                
+                console.log('Uploading file to:', fileRef.fullPath);
+                
+                // Upload the file
+                const snapshot = await fileRef.put(file);
+                console.log('Upload completed, getting download URL...');
+                
+                // Get the download URL
+                const photoURL = await snapshot.ref.getDownloadURL();
+                console.log('Download URL:', photoURL);
+                
+                // Update user's profile with the new photo URL
+                console.log('Updating user profile...');
+                await user.updateProfile({
+                    photoURL: photoURL
+                });
+                
+                // Update in Firestore
+                console.log('Updating Firestore...');
+                await db.collection('users').doc(user.uid).set({
+                    photoURL: photoURL,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+                
+                // Update UI
+                console.log('Updating UI...');
+                updateUserProfileImage(photoURL);
+                
+                // Show success message
+                console.log('Profile picture updated successfully!');
+                showSuccess('Profile picture updated successfully!');
+                
+            } catch (error) {
+                console.error('Error in handleAvatarUpload:', error);
+                showError('Failed to upload profile picture: ' + (error.message || 'Unknown error'));
+            } finally {
+                // Reset the file input and button state
+                console.log('Resetting UI state...');
+                event.target.value = ''; // Reset file input
+                if (uploadAvatarBtn) {
+                    uploadAvatarBtn.innerHTML = '<i class="fas fa-camera"></i>';
+                    uploadAvatarBtn.disabled = false;
+                }
+            }
+        }
+        
+        // Update user profile image in the UI
+        function updateUserProfileImage(photoURL) {
+            console.log('Updating profile image in UI with URL:', photoURL);
+            
+            // Get the user initials element if it exists
+            const userInitials = document.getElementById('userInitials');
+            if (!userInitials) {
+                console.error('User initials element not found');
+                return;
+            }
+            
+            if (!photoURL) {
+                // If no photo URL, show initials
+                console.log('No photo URL provided, showing initials');
+                userInitials.style.display = 'flex';
+                userInitials.style.backgroundImage = 'none';
+                userInitials.textContent = getInitials(auth.currentUser?.displayName || auth.currentUser?.email || '??');
+                return;
+            }
+            
+            try {
+                // Create a new image to test if the URL is valid
+                const img = new Image();
+                img.onload = function() {
+                    // Image loaded successfully
+                    console.log('Profile image loaded successfully');
+                    userInitials.style.display = 'flex';
+                    userInitials.style.backgroundImage = `url(${photoURL})`;
+                    userInitials.style.backgroundSize = 'cover';
+                    userInitials.style.backgroundPosition = 'center';
+                    userInitials.textContent = ''; // Clear initials when image is available
+                    
+                    // Also update the profile image in the sidebar if it exists
+                    const sidebarAvatar = document.querySelector('.sidebar-avatar, .profile-avatar');
+                    if (sidebarAvatar) {
+                        console.log('Updating sidebar avatar');
+                        sidebarAvatar.style.backgroundImage = `url(${photoURL})`;
+                        sidebarAvatar.style.backgroundSize = 'cover';
+                        sidebarAvatar.style.backgroundPosition = 'center';
+                        
+                        const sidebarInitials = sidebarAvatar.querySelector('.avatar-initials, #userInitials');
+                        if (sidebarInitials) {
+                            sidebarInitials.style.display = 'none';
+                        }
+                    }
+                };
+                
+                img.onerror = function() {
+                    console.error('Failed to load profile image');
+                    // Fall back to initials if image fails to load
+                    userInitials.style.backgroundImage = 'none';
+                    userInitials.textContent = getInitials(auth.currentUser?.displayName || auth.currentUser?.email || '??');
+                };
+                
+                // Start loading the image
+                img.src = photoURL;
+                
+            } catch (error) {
+                console.error('Error updating profile image:', error);
+                // Fall back to initials on error
+                userInitials.style.backgroundImage = 'none';
+                userInitials.textContent = getInitials(auth.currentUser?.displayName || auth.currentUser?.email || '??');
+            }
+        }
+        
+        // Helper function to get initials from name or email
+        function getInitials(name) {
+            if (!name) return '??';
+            
+            // If it's an email, get the part before @
+            if (name.includes('@')) {
+                name = name.split('@')[0];
+            }
+            
+            // Get first letter of each word, up to 2 characters
+            return name
+                .split(' ')
+                .map(part => part[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+        }
+        
+        // Update user initials based on display name or email
+        function updateUserInitials(user) {
+            if (!user) return;
+            
+            // If user has a photo URL, use that instead of initials
+            if (user.photoURL) {
+                updateUserProfileImage(user.photoURL);
+                return;
+            }
+            
+            // Otherwise, show initials
+            const displayName = user.displayName || user.email || 'U';
+            const initials = displayName
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+                
+            userInitials.textContent = initials;
+            userInitials.style.backgroundImage = 'none';
+            userInitials.style.display = 'flex';
+        }
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            firebase.auth().signOut().then(() => {
+                // Sign-out successful
+                window.location.href = 'index.html';
+            }).catch((error) => {
+                // An error happened
+                console.error('Logout error:', error);
+                alert('Error signing out. Please try again.');
+            });
+        });
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Firebase Auth state observer
+            firebase.auth().onAuthStateChanged((user) => {
+                currentUser = user;
+                
+                // Update UI based on auth state
+                const userProfile = document.getElementById('userProfile');
+                const loginBtn = document.getElementById('loginBtn');
+                
+                if (user) {
+                    // User is signed in
+                    if (userProfile) userProfile.style.display = 'block';
+                    if (loginBtn) loginBtn.style.display = 'none';
+                } else {
+                    // User is signed out, redirect to login
+                    if (userProfile) userProfile.style.display = 'none';
+                    if (loginBtn) loginBtn.style.display = 'inline-block';
+                    window.location.href = 'login.html';
+                }
+                if (user) {
+                    // User is signed in
+                    profileName.textContent = user.displayName || user.email.split('@')[0];
+                    userEmail.textContent = user.email;
+                    updateUserInitials();
+                    
+                    // Load additional user data from Firestore if needed
+                    loadUserData(user.uid);
+                } else {
+                    // User is signed out
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // Load additional user data from Firestore
+            async function loadUserData(userId) {
+                try {
+                    const userDoc = await db.collection('users').doc(userId).get();
+                    if (userDoc.exists) {
+                        userData = userDoc.data();
+                        // Update UI with user data
+                        if (userData.displayName) {
+                            profileName.textContent = userData.displayName;
+                        }
+                        // Update other fields as needed
+                    }
+                } catch (error) {
+                    console.error('Error loading user data:', error);
+                }
+            }
+            
+            // Initialize tab functionality
+            const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabEls.forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', function (event) {
+                    const target = event.target.getAttribute('data-bs-target');
+                    if (target === '#notifications') {
+                        loadUserNotifications(currentUser.uid);
+                    } else if (target === '#listings') {
+                        loadUserListings(currentUser.uid);
+                    }
+                });
+            });
+
+            // Handle profile update form
+            const profileForm = document.getElementById('profileForm');
+            if (profileForm) {
+                profileForm.addEventListener('submit', updateProfile);
+            }
+
+            // Handle password change form
+            const passwordForm = document.getElementById('passwordForm');
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', changePassword);
+            }
+
+            // Handle account deletion
+            const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+            if (deleteAccountBtn) {
+                deleteAccountBtn.addEventListener('click', confirmDeleteAccount);
+            }
+        });
+
+        // Handle authentication state changes
+        async function handleAuthStateChanged(user) {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                currentUser = user;
+                await loadUserData(user);
+                await loadUserListings(user.uid);
+                updateUIForAuth(user);
+                updateStats();
+                
+                // Load notifications after a short delay to ensure UI is ready
+                setTimeout(() => loadUserNotifications(user.uid), 500);
+                
+                // Load additional user data for stats
+                await loadUserStats(user.uid);
+            } catch (error) {
+                console.error('Error in auth state change:', error);
+                showError('Error loading account data. Please refresh the page.');
+            }
+        }
+        
+        // Load user stats from Firestore
+        async function loadUserStats(userId) {
+            try {
+                // Get user's listings for stats
+                const listingsSnapshot = await db.collection('listings')
+                    .where('userId', '==', userId)
+                    .get();
+                
+                // Calculate total views and earnings
+                let totalViews = 0;
+                let totalEarnings = 0;
+                let activeListings = 0;
+                let soldListings = 0;
+                
+                listingsSnapshot.forEach(doc => {
+                    const listing = doc.data();
+                    totalViews += (listing.views || 0);
+                    
+                    if (listing.status === 'sold' && listing.price) {
+                        totalEarnings += parseFloat(listing.price);
+                        soldListings++;
+                    } else if (listing.status === 'active') {
+                        activeListings++;
+                    }
+                });
+                
+                // Update stats in UI
+                document.getElementById('totalViews').textContent = totalViews.toLocaleString();
+                document.getElementById('activeListings').textContent = activeListings;
+                document.getElementById('soldListings').textContent = soldListings;
+                document.getElementById('totalEarnings').textContent = `$${totalEarnings.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                
+                // Update profile completion
+                updateProfileCompletion();
+                
+            } catch (error) {
+                console.error('Error loading user stats:', error);
+            }
+        }
+        
+        // Update profile completion percentage and progress bar
+        function updateProfileCompletion() {
+            if (!userData) return;
+            
+            let completion = 0;
+            const fields = [
+                userData.displayName,
+                userData.phone,
+                userData.location,
+                userData.photoURL,
+                userData.bio
+            ];
+            
+            // Count completed fields
+            const completedFields = fields.filter(field => field && field.trim() !== '').length;
+            completion = Math.round((completedFields / fields.length) * 100);
+            
+            // Update UI
+            const progressBar = document.querySelector('.progress-bar');
+            const progressText = document.querySelector('.progress-text');
+            
+            if (progressBar && progressText) {
+                progressBar.style.width = `${completion}%`;
+                progressText.textContent = `${completion}% Complete`;
+            }
+        }
+
+        // Get user initials from name or email
+        function getUserInitials(user) {
+            if (user.displayName) {
+                return user.displayName
+                    .split(' ')
+                    .map(n => n[0])
+                    .join('')
+                    .toUpperCase()
+                    .substring(0, 2);
+            }
+            return user.email.substring(0, 2).toUpperCase();
+        }
+
+        // Format date to Month YYYY
+        function formatJoinDate(date) {
+            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
+        }
+
+        // Load user data from Firestore
+        async function loadUserData(user) {
+            try {
+                const userDoc = await db.collection('users').doc(user.uid).get();
+                if (userDoc.exists) {
+                    userData = { id: userDoc.id, ...userDoc.data() };
+                    
+                    // Update profile section
+                    const displayName = user.displayName || user.email.split('@')[0];
+                    document.getElementById('profileName').textContent = displayName;
+                    document.getElementById('userEmail').textContent = user.email;
+                    
+                    // Set user initials
+                    const initials = getUserInitials(user);
+                    const initialsElement = document.getElementById('userInitials');
+                    if (initialsElement) {
+                        initialsElement.textContent = initials;
+                    }
+                    
+                    // Set join date
+                    const joinDate = userData.createdAt?.toDate() || new Date(user.metadata.creationTime);
+                    const joinDateElement = document.getElementById('joinDate');
+                    if (joinDateElement) {
+                        joinDateElement.textContent = formatJoinDate(joinDate);
+                    }
+                    
+                    // Set profile image or default
+                    const profileAvatar = document.getElementById('profileAvatar');
+                    if (user.photoURL) {
+                        profileAvatar.src = user.photoURL;
+                    } else {
+                        profileAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4f46e5&color=fff`;
+                    }
+                    
+                    // Update account info
+                    if (userData.phone) {
+                        document.getElementById('phone').value = userData.phone;
+                        document.getElementById('accountPhone').textContent = userData.phone;
+                    }
+                    
+                    if (userData.location) {
+                        document.getElementById('location').value = userData.location;
+                        document.getElementById('accountLocation').textContent = userData.location;
+                    }
+                    
+                    if (userData.bio) {
+                        document.getElementById('bio').value = userData.bio;
+                    }
+                    
+                    // Update member since date
+                    const memberSince = userData.createdAt?.toDate() || new Date(user.metadata.creationTime);
+                    document.getElementById('memberSince').textContent = memberSince.toLocaleDateString();
+                    
+                    // Update stats
+                    updateStats();
+                    
+                } else {
+                    // Create user document if it doesn't exist
+                    await db.collection('users').doc(user.uid).set({
+                        email: user.email,
+                        displayName: user.displayName || user.email.split('@')[0],
+                        photoURL: user.photoURL || '',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        stats: {
+                            listingsCount: 0,
+                            totalViews: 0,
+                            memberSince: firebase.firestore.FieldValue.serverTimestamp()
+                        }
+                    });
+                    
+                    // Reload user data
+                    await loadUserData(user);
+                }
+            } catch (error) {
+                console.error('Error loading user data:', error);
+                showError('Failed to load user data. Please try again.');
+            }
+        }
+        
+        // Update stats in the UI
+        function updateStats() {
+            if (!userData) return;
+            
+            // Update stats cards
+            const stats = userData.stats || {};
+            document.getElementById('goatsListed').textContent = stats.listingsCount || 0;
+            document.getElementById('totalViews').textContent = stats.totalViews || 0;
+            
+            // Calculate account age
+            if (stats.memberSince) {
+                const joinDate = stats.memberSince.toDate ? stats.memberSince.toDate() : new Date(stats.memberSince);
+                const months = (new Date().getFullYear() - joinDate.getFullYear()) * 12 + 
+                              (new Date().getMonth() - joinDate.getMonth());
+                document.getElementById('accountAge').textContent = `${months} ${months === 1 ? 'month' : 'months'}`;
+            }
+        }
+
+        // Load and display user's listings
+        async function loadUserListings(userId) {
+            const listingsGrid = document.getElementById('listingsGrid');
+            if (!listingsGrid) return;
+            
+            try {
+                const { listings } = await listingService.getUserListings(userId, { limit: 10 });
+                
+                if (listings.length === 0) {
+                    listingsGrid.innerHTML = `
+                        <div class="no-listings" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                            <i class="fas fa-kiwi-bird" style="font-size: 2.5rem; color: #e5e7eb; margin-bottom: 1rem;"></i>
+                            <h3>No Listings Yet</h3>
+                            <p>You haven't listed any goats for sale yet.</p>
+                            <a href="create-listing.html" class="btn btn-primary" style="margin-top: 1rem;">
+                                <i class="fas fa-plus"></i> Create Your First Listing
+                            </a>
+                        </div>`;
+                    return;
+                }
+                
+                listingsGrid.innerHTML = listings.map(listing => createListingCard(listing)).join('');
+                
+                // Add event listeners to action buttons
+                document.querySelectorAll('.edit-listing').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const listingId = e.currentTarget.dataset.id;
+                        window.location.href = `edit-listing.html?id=${listingId}`;
+                    });
+                });
+                
+                document.querySelectorAll('.delete-listing').forEach(btn => {
+                    btn.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        const listingId = e.currentTarget.dataset.id;
+                        if (confirm('Are you sure you want to delete this listing? This action cannot be undone.')) {
+                            try {
+                                await listingService.deleteListing(listingId);
+                                e.currentTarget.closest('.listing-card').remove();
+                                // Update stats
+                                const goatsListed = document.getElementById('goatsListed');
+                                goatsListed.textContent = parseInt(goatsListed.textContent) - 1;
+                            } catch (error) {
+                                console.error('Error deleting listing:', error);
+                                showError('Failed to delete listing. Please try again.');
+                            }
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error('Error loading listings:', error);
+                showError('Failed to load your listings. Please try again.');
+            }
+        }
+
+        // Create HTML for a listing card
+        function createListingCard(listing) {
+            const imageUrl = listing.images && listing.images.length > 0 
+                ? listing.images[0].startsWith('gs://') 
+                    ? `https://firebasestorage.googleapis.com/v0/b/${listing.images[0].split('/')[2]}/o/${encodeURIComponent(listing.images[0].split('/').slice(3).join('/'))}?alt=media`
+                    : listing.images[0]
+                : 'https://via.placeholder.com/400x300?text=No+Image';
+                
+            const price = listing.price ? `$${parseFloat(listing.price).toLocaleString()}` : 'Price on Request';
+            const status = listing.status || 'active';
+            const statusClass = status === 'sold' ? 'status-sold' : 'status-active';
+            
+            return `
+                <div class="listing-card" onclick="window.location.href='listing-details.html?id=${listing.id}'">
+                    <div class="listing-image" style="background-image: url('${imageUrl}')">
+                        <span class="status-badge ${statusClass}">${status}</span>
+                    </div>
+                    <div class="listing-details">
+                        <h3>${listing.title || 'Goat for Sale'}</h3>
+                        <p class="price">${price}</p>
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> ${listing.location || 'Location not specified'}</p>
+                        <div class="listing-actions">
+                            <button class="btn-icon edit-listing" data-id="${listing.id}" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-icon delete-listing" data-id="${listing.id}" title="Delete">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }
+        
+        // Check if current page is the account page
+        function isAccountPage() {
+            return window.location.pathname.includes('account.html');
+        }
+
+        // Update UI based on authentication state
+        function updateUIForAuth(user) {
+            const userProfile = document.getElementById('userProfile');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            if (user) {
+                // Hide user profile in nav if on account page
+                if (userProfile) {
+                    userProfile.style.display = isAccountPage() ? 'none' : 'flex';
+                }
+                
+                if (loginBtn) loginBtn.style.display = 'none';
+                
+                // Get user display name (fallback to email username)
+                const displayName = user.displayName || user.email.split('@')[0];
+                
+                // Only update nav elements if not on account page
+                if (!isAccountPage()) {
+                    const navUserName = document.getElementById('navUserName');
+                    const navUserEmail = document.getElementById('navUserEmail');
+                    const navUserAvatar = document.getElementById('navUserAvatar');
+                    
+                    if (navUserName) navUserName.textContent = displayName;
+                    if (navUserEmail) navUserEmail.textContent = user.email;
+                    
+                    if (navUserAvatar) {
+                        navUserAvatar.src = user.photoURL || 
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=4f46e5&color=fff`;
+                        navUserAvatar.alt = `${displayName}'s profile picture`;
+                    }
+                }
+                
+                // Always update profile page header if elements exist
+                const profileName = document.getElementById('profileName');
+                if (profileName) profileName.textContent = displayName;
+                
+                const profileEmail = document.getElementById('profileEmail');
+                if (profileEmail) profileEmail.textContent = user.email;
+                
+            } else {
+                // User is signed out
+                if (userProfile) userProfile.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+                
+                // Redirect to login if not on login/signup page
+                if (!window.location.pathname.includes('login.html') && 
+                    !window.location.pathname.includes('signup.html') &&
+                    !isAccountPage()) {
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+        
+        // Handle profile picture upload
+        document.getElementById('uploadAvatar')?.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            try {
+                // Show loading state
+                const avatar = document.getElementById('profileAvatar');
+                avatar.style.opacity = '0.7';
+                
+                // Upload to Firebase Storage
+                const storageRef = storage.ref(`users/${user.uid}/avatar/${file.name}`);
+                await storageRef.put(file);
+                const photoURL = await storageRef.getDownloadURL();
+                
+                // Update user profile
+                await user.updateProfile({ photoURL });
+                await db.collection('users').doc(user.uid).update({
+                    photoURL,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update UI
+                avatar.src = photoURL;
+                avatar.style.opacity = '1';
+                
+                // Update avatar in navbar
+                const navAvatar = document.querySelector('.user-avatar');
+                if (navAvatar) {
+                    navAvatar.src = photoURL;
+                }
+                
+            } catch (error) {
+                console.error('Error updating profile picture:', error);
+                showError('Failed to update profile picture. Please try again.');
+            }
+        });
+        
+        // Handle profile update
+        document.getElementById('updateProfileBtn')?.addEventListener('click', async () => {
+            const displayName = document.getElementById('displayName')?.value.trim();
+            const phone = document.getElementById('phone')?.value.trim();
+            const location = document.getElementById('location')?.value.trim();
+            const bio = document.getElementById('bio')?.value.trim();
+            
+            if (!displayName) {
+                showError('Display name is required');
+                return;
+            }
+            
+            try {
+                const user = auth.currentUser;
+                if (!user) throw new Error('Not authenticated');
+                
+                // Show loading state
+                const updateBtn = document.getElementById('updateProfileBtn');
+                const originalBtnText = updateBtn.innerHTML;
+                updateBtn.disabled = true;
+                updateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
+                
+                // Update user profile
+                await user.updateProfile({ displayName });
+                
+                // Update user document
+                const updateData = {
+                    displayName,
+                    phone: phone || '',
+                    location: location || '',
+                    bio: bio || '',
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                
+                await db.collection('users').doc(user.uid).set(updateData, { merge: true });
+                
+                // Update local user data
+                userData = { ...userData, ...updateData };
+                
+                // Update UI
+                document.getElementById('profileName').textContent = displayName;
+                if (phone) document.getElementById('accountPhone').textContent = phone;
+                if (location) document.getElementById('accountLocation').textContent = location;
+                
+                // Update profile completion
+                updateProfileCompletion();
+                
+                // Show success message
+                showSuccess('Profile updated successfully!');
+                
+                // Re-enable button
+                updateBtn.disabled = false;
+                updateBtn.innerHTML = originalBtnText;
+                
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showError('Failed to update profile. Please try again.');
+                
+                // Re-enable button on error
+                const updateBtn = document.getElementById('updateProfileBtn');
+                if (updateBtn) {
+                    updateBtn.disabled = false;
+                    updateBtn.textContent = 'Update Profile';
+                }
+            }
+        });
+        
+        // Handle change password
+        document.getElementById('changePasswordBtn')?.addEventListener('click', async () => {
+            const currentPassword = prompt('Enter your current password:');
+            if (!currentPassword) return;
+            
+            const newPassword = prompt('Enter your new password:');
+            if (!newPassword || newPassword.length < 6) {
+                showError('Password must be at least 6 characters long');
+                return;
+            }
+            
+            const confirmPassword = prompt('Confirm your new password:');
+            if (newPassword !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            try {
+                const user = auth.currentUser;
+                if (!user || !user.email) throw new Error('Not authenticated');
+                
+                // Reauthenticate user
+                const credential = firebase.auth.EmailAuthProvider.credential(user.email, currentPassword);
+                await user.reauthenticateWithCredential(credential);
+                
+                // Update password
+                await user.updatePassword(newPassword);
+                
+                showSuccess('Password updated successfully!');
+                
+            } catch (error) {
+                console.error('Error changing password:', error);
+                if (error.code === 'auth/wrong-password') {
+                    showError('Incorrect current password');
+                } else {
+                    showError('Failed to update password. Please try again.');
+                }
+            }
+        });
+        
+        // Handle delete account
+        document.getElementById('deleteAccountBtn')?.addEventListener('click', async () => {
+            if (!confirm('Are you sure you want to delete your account? This action cannot be undone and all your data will be permanently removed.')) {
+                return;
+            }
+            
+            const password = prompt('Please enter your password to confirm account deletion:');
+            if (!password) return;
+            
+            try {
+                const user = auth.currentUser;
+                if (!user || !user.email) throw new Error('Not authenticated');
+                
+                // Reauthenticate user
+                const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
+                await user.reauthenticateWithCredential(credential);
+                
+                // Delete user data from Firestore (optional: you might want to keep some data)
+                await db.collection('users').doc(user.uid).delete();
+                
+                // Delete user account
+                await user.delete();
+                
+                // Redirect to home page
+                window.location.href = 'index.html';
+                
+            } catch (error) {
+                console.error('Error deleting account:', error);
+                if (error.code === 'auth/wrong-password') {
+                    showError('Incorrect password');
+                } else {
+                    showError('Failed to delete account. Please try again.');
+                }
+            }
+        });
+        
+        // Handle logout
+        document.getElementById('logoutBtn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await auth.signOut();
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showError('Failed to sign out. Please try again.');
+            }
+        });
+        
+        // Initialize tooltips
+        function initTooltips() {
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        }
+        
+        // Initialize date picker for availability
+        function initDatePicker() {
+            const dateInput = document.getElementById('availableDate');
+            if (dateInput) {
+                flatpickr(dateInput, {
+                    minDate: 'today',
+                    dateFormat: 'Y-m-d',
+                    disable: [
+                        function(date) {
+                            // Disable weekends
+                            return (date.getDay() === 0 || date.getDay() === 6);
+                        }
+                    ]
+                });
+            }
+        }
+        
+        // Helper functions - error display removed
+        function showError(message) {
+            console.error(message); // Log to console instead of showing to user
+        }
+        
+        function showSuccess(message) {
+            console.log(message); // Log to console instead of showing to user
+            interval = Math.floor(seconds / 2592000);
+            if (interval >= 1) return interval + ' month' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 86400);
+            if (interval >= 1) return interval + ' day' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 3600);
+            if (interval >= 1) return interval + ' hour' + (interval === 1 ? '' : 's') + ' ago';
+            interval = Math.floor(seconds / 60);
+            if (interval >= 1) return interval + ' minute' + (interval === 1 ? '' : 's') + ' ago';
+            return 'just now';
+        }
+        
+        // Load user notifications
+        async function loadUserNotifications(userId) {
+            const notificationsContainer = document.getElementById('notificationsContainer');
+            if (!notificationsContainer) return;
+            
+            try {
+                // Show loading state
+                const loadingElement = document.createElement('div');
+                loadingElement.id = 'notificationsLoading';
+                loadingElement.className = 'text-center py-5';
+                loadingElement.innerHTML = `
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading notifications...</p>`;
+                
+                notificationsContainer.innerHTML = '';
+                notificationsContainer.appendChild(loadingElement);
+                
+                // Get notifications from Firestore
+                const notificationsRef = db.collection('notifications')
+                    .where('userId', '==', userId)
+                    .orderBy('createdAt', 'desc')
+                    .limit(10);
+                
+                const snapshot = await notificationsRef.get();
+                
+                // Remove loading state
+                if (loadingElement.parentNode === notificationsContainer) {
+                    notificationsContainer.removeChild(loadingElement);
+                }
+                
+                if (snapshot.empty) {
+                    notificationsContainer.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-bell-slash fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">No notifications yet</p>
+                        </div>`;
+                    return;
+                }
+                
+                let unreadCount = 0;
+                const notifications = [];
+                const now = new Date();
+                
+                // Process notifications
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    const createdAt = data.createdAt?.toDate ? data.createdAt.toDate() : new Date();
+                    const timeDiff = Math.floor((now - createdAt) / 1000); // in seconds
+                    
+                    const notification = { 
+                        id: doc.id, 
+                        ...data,
+                        createdAt: createdAt,
+                        timeAgo: formatTimeAgo(timeDiff)
+                    };
+                    
+                    if (!notification.isRead) unreadCount++;
+                    notifications.push(notification);
+                });
+                
+                // Update notification badge in the UI
+                updateNotificationBadge(unreadCount);
+                
+                // Render the notifications
+                renderNotifications(notifications);
+                
+                // Add click handler for mark all as read button
+                const markAllReadBtn = document.getElementById('markAllReadBtn');
+                if (markAllReadBtn) {
+                    markAllReadBtn.onclick = () => markAllNotificationsAsRead(notifications);
+                }
+                
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+                renderNotificationsError();
+            }
+        }
+        
+        // Mark all notifications as read
+        async function markAllNotificationsAsRead(notifications) {
+            const unreadNotifications = notifications.filter(n => !n.isRead);
+            if (unreadNotifications.length === 0) return;
+            
+            try {
+                // Update all unread notifications in a batch
+                const batch = db.batch();
+                const now = new Date();
+                
+                unreadNotifications.forEach(notification => {
+                    const notificationRef = db.collection('notifications').doc(notification.id);
+                    batch.update(notificationRef, {
+                        isRead: true,
+                        readAt: now
+                    });
+                });
+                
+                await batch.commit();
+                
+                // Update UI
+                unreadNotifications.forEach(notification => {
+                    notification.isRead = true;
+                    const notificationElement = document.querySelector(`.notification-item[data-id="${notification.id}"]`);
+                    if (notificationElement) {
+                        notificationElement.classList.remove('unread');
+                    }
+                });
+                
+                // Update notification badge
+                updateNotificationBadge(0);
+                
+                showSuccess('All notifications marked as read');
+                
+            } catch (error) {
+                console.error('Error marking notifications as read:', error);
+                showError('Failed to mark notifications as read. Please try again.');
+            }
+        }
+        
+        // Update notification badge in the UI
+        function updateNotificationBadge(count) {
+            const badge = document.getElementById('notificationsCount');
+            if (!badge) return;
+            
+            badge.textContent = count > 0 ? count : '';
+            badge.style.display = count > 0 ? 'flex' : 'none';
+            
+            // Also update the badge in the navigation menu if it exists
+            const navBadge = document.querySelector('.account-nav .badge');
+            if (navBadge) {
+                navBadge.textContent = count > 0 ? count : '';
+                navBadge.style.display = count > 0 ? 'flex' : 'none';
+            }
+        }
+        
+        // Render notifications in the UI
+        function renderNotifications(notifications) {
+            const container = document.getElementById('notificationsContainer');
+            if (!container) return;
+            
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-bell-slash text-muted" style="font-size: 2rem;"></i>
+                        <p class="mt-2">No notifications yet</p>
+                    </div>`;
+                return;
+            }
+            
+            container.innerHTML = notifications.map(notif => `
+                <div class="notification-item ${!notif.isRead ? 'unread' : ''}" data-id="${notif.id}">
+                    <div class="notification-icon bg-${getNotificationColor(notif.type)}">
+                        <i class="${getNotificationIcon(notif.type)}"></i>
+                    </div>
+                    <div class="notification-content">
+                        <h4 class="notification-title">${notif.title}</h4>
+                        <p class="notification-text">${notif.message}</p>
+                        <p class="notification-time">${notif.timeAgo}</p>
+                    </div>
+                </div>`).join('');
+                
+            // Add click handlers
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', () => handleNotificationClick(item.dataset.id));
+            });
+        }
+        
+        // Handle notification click
+        async function handleNotificationClick(notificationId) {
+            try {
+                // Mark as read
+                await db.collection('notifications').doc(notificationId).update({
+                    isRead: true,
+                    readAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Update UI
+                const notificationItem = document.querySelector(`.notification-item[data-id="${notificationId}"]`);
+                if (notificationItem) {
+                    notificationItem.classList.remove('unread');
+                    
+                    // Update unread count
+                    const notificationBadge = document.querySelector('.notification-badge');
+                    if (notificationBadge) {
+                        const currentCount = parseInt(notificationBadge.textContent) || 0;
+                        const newCount = Math.max(0, currentCount - 1);
+                        notificationBadge.textContent = newCount > 0 ? newCount : '';
+                        notificationBadge.style.display = newCount > 0 ? 'flex' : 'none';
+                    }
+                }
+                
+                // Handle navigation based on notification type
+                // You can add specific navigation logic here
+                
+            } catch (error) {
+                console.error('Error handling notification click:', error);
+            }
+        }
+        
+        // Get notification color based on type
+        function getNotificationColor(type) {
+            const colors = {
+                'message': 'primary',
+                'success': 'success',
+                'warning': 'warning',
+                'error': 'danger',
+                'info': 'info'
+            };
+            return colors[type] || 'secondary';
+        }
+        
+        // Get notification icon based on type
+        function getNotificationIcon(type) {
+            const icons = {
+                'message': 'fas fa-envelope',
+                'success': 'fas fa-check-circle',
+                'warning': 'fas fa-exclamation-triangle',
+                'error': 'fas fa-times-circle',
+                'info': 'fas fa-info-circle'
+            };
+            return icons[type] || 'fas fa-bell';
+        }
+        
+        // Show error state for notifications
+        function renderNotificationsError() {
+            const container = document.getElementById('notificationsContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        Failed to load notifications. Please try again later.
+                    </div>`;
+            }
+        }
+        
+        // Initialize components when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize tooltips
+            if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
+                initTooltips();
+            }
+            
+            // Initialize date picker
+            if (typeof flatpickr !== 'undefined') {
+                initDatePicker();
+            }
+            
+            // Handle tab switching to load data as needed
+            const tabEls = document.querySelectorAll('button[data-bs-toggle="tab"]');
+            tabEls.forEach(tabEl => {
+                tabEl.addEventListener('shown.bs.tab', (event) => {
+                    const target = event.target.getAttribute('data-bs-target');
+                    if (target === '#listings' && currentUser) {
+                        loadUserListings(currentUser.uid);
+                    } else if (target === '#notifications' && currentUser) {
+                        loadUserNotifications(currentUser.uid);
+                    }
+                });
+            });
+            
+            // Handle file input change for profile picture
+            const uploadAvatar = document.getElementById('uploadAvatar');
+            const avatarPreview = document.getElementById('profileAvatar');
+            
+            if (uploadAvatar && avatarPreview) {
+                uploadAvatar.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            avatarPreview.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            // Load notifications if on notifications tab
+            if (currentUser && window.location.hash === '#notifications') {
+                loadUserNotifications(currentUser.uid);
+            }
+        });
+        
+        // Update the auth state change handler to load notifications
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                currentUser = user;
+                await loadUserData(user);
+                await loadUserListings(user.uid);
+                updateUIForAuth(user);
+                updateStats();
+                
+                // Load notifications if on notifications tab
+                if (window.location.hash === '#notifications') {
+                    loadUserNotifications(user.uid);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

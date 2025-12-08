@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goat Listing - Ruminary</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.4.0/css/lightgallery-bundle.min.css">
+    <style>
+        .listing-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #4f46e5;
+            text-decoration: none;
+            margin-bottom: 1rem;
+        }
+        .back-link i {
+            margin-right: 0.5rem;
+        }
+        .listing-content {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .gallery {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .main-image {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            cursor: pointer;
+        }
+        .thumbnail-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.25rem;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .thumbnail.active, .thumbnail:hover {
+            border-color: #4f46e5;
+        }
+        .listing-details {
+            position: sticky;
+            top: 1rem;
+        }
+        .listing-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .listing-title {
+            margin: 0 0 0.5rem;
+            color: #1f2937;
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+        .listing-location {
+            display: flex;
+            align-items: center;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+        .listing-location i {
+            margin-right: 0.5rem;
+        }
+        .listing-price {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 1rem 0;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        .btn-contact {
+            flex: 1;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+        .btn-contact:hover {
+            background: #4338ca;
+        }
+        .btn-save {
+            background: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            padding: 0 1.5rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .btn-save:hover {
+            background: #e5e7eb;
+        }
+        .seller-info {
+            display: flex;
+            align-items: center;
+            padding: 1.5rem 0;
+            border-top: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            margin: 1.5rem 0;
+        }
+        .seller-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+        .seller-details h4 {
+            margin: 0 0 0.25rem;
+            color: #1f2937;
+        }
+        .seller-rating {
+            color: #f59e0b;
+            font-size: 0.875rem;
+        }
+        .listing-section {
+            margin-bottom: 2rem;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        .detail-item {
+            margin-bottom: 0.75rem;
+        }
+        .detail-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        .detail-value {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        .description {
+            line-height: 1.6;
+            color: #4b5563;
+        }
+        .map-placeholder {
+            background: #f3f4f6;
+            height: 200px;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            margin-top: 1.5rem;
+        }
+        .similar-listings {
+            margin-top: 4rem;
+        }
+        .similar-listings h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: #1f2937;
+        }
+        .goat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .report-link {
+            display: inline-block;
+            margin-top: 1rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            text-decoration: none;
+        }
+        .report-link:hover {
+            text-decoration: underline;
+        }
+        .sold-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: #ef4444;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            z-index: 10;
+        }
+        @media (max-width: 768px) {
+            .listing-content {
+                grid-template-columns: 1fr;
+            }
+            .main-image {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">GOATIQUE</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#goats">Our Goats</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="account.html" class="btn btn-outline" id="accountLink">My Account</a>
+                <a href="create-listing.html" class="btn btn-primary">Sell a Goat</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Listing Content -->
+    <div class="listing-container">
+        <a href="index.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Listings
+        </a>
+        
+        <div id="soldBadge" class="sold-badge" style="display: none;">SOLD</div>
+        
+        <div class="listing-content">
+            <!-- Image Gallery -->
+            <div class="gallery">
+                <img id="mainImage" src="https://via.placeholder.com/800x500?text=Loading..." alt="Goat" class="main-image">
+                <div class="thumbnail-container" id="thumbnailContainer">
+                    <!-- Thumbnails will be added here by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Listing Details -->
+            <div class="listing-details">
+                <div class="listing-header">
+                    <h1 class="listing-title" id="listingTitle">Loading...</h1>
+                    <div class="listing-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="listingLocation">Location</span>
+                    </div>
+                    <div class="listing-price" id="listingPrice">$0</div>
+                    
+                    <div class="action-buttons">
+                        <button class="btn-contact" id="contactSellerBtn">
+                            <i class="fas fa-envelope"></i> Contact Seller
+                        </button>
+                        <button class="btn-save" id="saveListingBtn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="seller-info">
+                        <img src="https://ui-avatars.com/api/?name=Seller&background=4f46e5&color=fff" alt="Seller" class="seller-avatar" id="sellerAvatar">
+                        <div class="seller-details">
+                            <h4 id="sellerName">Seller Name</h4>
+                            <div class="seller-rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span>(12 reviews)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="listing-section">
+                    <h3 class="section-title">Details</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Breed</div>
+                            <div class="detail-value" id="detailBreed">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Age</div>
+                            <div class="detail-value" id="detailAge">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Gender</div>
+                            <div class="detail-value" id="detailGender">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Vaccinated</div>
+                            <div class="detail-value" id="detailVaccinated">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Dewormed</div>
+                            <div class="detail-value" id="detailDewormed">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Listed</div>
+                            <div class="detail-value" id="detailListed">-</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="listing-section">
+                    <h3 class="section-title">Description</h3>
+                    <div class="description" id="listingDescription">
+                        Loading description...
+                    </div>
+                </div>
+                
+                <div class="listing-section">
+                    <h3 class="section-title">Location</h3>
+                    <div class="map-placeholder">
+                        <i class="fas fa-map-marker-alt" style="font-size: 2rem; margin-right: 0.5rem;"></i>
+                        <span id="mapLocation">Location map would be displayed here</span>
+                    </div>
+                </div>
+                
+                <a href="#" class="report-link">
+                    <i class="fas fa-flag"></i> Report this listing
+                </a>
+            </div>
+        </div>
+        
+        <!-- Similar Listings -->
+        <div class="similar-listings">
+            <h2>Similar Listings</h2>
+            <div class="goat-grid" id="similarListings">
+                <!-- Similar listings will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.4.0/lightgallery.umd.min.js"></script>
+    
+    <!-- Firebase Configuration and App Logic -->
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7draXchRUCkK1Hut1eD-Km1_Y4f_AtCU",
+            authDomain: "goatique-536bd.firebaseapp.com",
+            projectId: "goatique-536bd",
+            storageBucket: "goatique-536bd.firebasestorage.app",
+            messagingSenderId: "63709506575",
+            appId: "1:63709506575:web:864e9369dcf7021859077a",
+            measurementId: "G-63D52N4Z66"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // Get listing ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const listingId = urlParams.get('id');
+
+        if (!listingId) {
+            window.location.href = 'index.html';
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(price);
+        }
+
+        // Format date
+        function formatDate(timestamp) {
+            if (!timestamp || !timestamp.toDate) return 'N/A';
+            const date = timestamp.toDate();
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Format age
+        function formatAge(months) {
+            const years = Math.floor(months / 12);
+            const remainingMonths = months % 12;
+            
+            if (years === 0) {
+                return `${months} month${months !== 1 ? 's' : ''} old`;
+            } else if (remainingMonths === 0) {
+                return `${years} year${years !== 1 ? 's' : ''} old`;
+            } else {
+                return `${years} year${years !== 1 ? 's' : ''}, ${remainingMonths} month${remainingMonths !== 1 ? 's' : ''} old`;
+            }
+        }
+
+        // Load listing data
+        async function loadListing() {
+            try {
+                const doc = await db.collection('listings').doc(listingId).get();
+                
+                if (!doc.exists) {
+                    throw new Error('Listing not found');
+                }
+                
+                const listing = { id: doc.id, ...doc.data() };
+                
+                // Update page title
+                document.title = `${listing.title} - Ruminary`;
+                
+                // Update main content
+                document.getElementById('listingTitle').textContent = listing.title;
+                document.getElementById('listingLocation').textContent = listing.location;
+                document.getElementById('listingPrice').textContent = formatPrice(listing.price);
+                document.getElementById('listingDescription').textContent = listing.description;
+                
+                // Update details
+                document.getElementById('detailBreed').textContent = listing.breed || 'Not specified';
+                document.getElementById('detailAge').textContent = formatAge(listing.age || 0);
+                document.getElementById('detailGender').textContent = 
+                    listing.gender === 'male' ? 'Male (Buck)' : 
+                    listing.gender === 'female' ? 'Female (Doe)' : 
+                    listing.gender === 'wether' ? 'Wether' : 'Not specified';
+                
+                // Update health info
+                const health = listing.healthInfo || {};
+                document.getElementById('detailVaccinated').textContent = health.vaccinated ? 'Yes' : 'No';
+                document.getElementById('detailDewormed').textContent = health.dewormed ? 'Yes' : 'No';
+                document.getElementById('detailListed').textContent = formatDate(listing.createdAt);
+                
+                // Update images
+                const mainImage = document.getElementById('mainImage');
+                const thumbnailContainer = document.getElementById('thumbnailContainer');
+                
+                if (listing.images && listing.images.length > 0) {
+                    // Set main image
+                    mainImage.src = listing.images[0];
+                    
+                    // Add thumbnails
+                    thumbnailContainer.innerHTML = '';
+                    listing.images.forEach((img, index) => {
+                        const thumbnail = document.createElement('img');
+                        thumbnail.src = img;
+                        thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+                        thumbnail.alt = `Thumbnail ${index + 1}`;
+                        thumbnail.onclick = () => {
+                            // Update main image
+                            mainImage.src = img;
+                            
+                            // Update active thumbnail
+                            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                            thumbnail.classList.add('active');
+                        };
+                        thumbnailContainer.appendChild(thumbnail);
+                    });
+                    
+                    // Initialize lightgallery
+                    mainImage.onclick = () => {
+                        const lightbox = window.lightGallery(mainImage, {
+                            dynamic: true,
+                            dynamicEl: listing.images.map(img => ({
+                                src: img,
+                                thumb: img
+                            })),
+                            download: false,
+                            zoom: true
+                        });
+                        lightbox.openGallery(0);
+                    };
+                }
+                
+                // Load seller info
+                if (listing.sellerId) {
+                    loadSellerInfo(listing.sellerId);
+                }
+                
+                // Load similar listings
+                loadSimilarListings(listing.breed, listing.id);
+                
+                // Show sold badge if applicable
+                if (listing.status === 'sold') {
+                    document.getElementById('soldBadge').style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Error loading listing:', error);
+                document.getElementById('listingTitle').textContent = 'Listing not found';
+                document.getElementById('listingDescription').textContent = 'The listing you are looking for does not exist or has been removed.';
+            }
+        }
+        
+        // Load seller information
+        async function loadSellerInfo(sellerId) {
+            try {
+                const doc = await db.collection('users').doc(sellerId).get();
+                if (doc.exists) {
+                    const userData = doc.data();
+                    const sellerName = document.getElementById('sellerName');
+                    const sellerAvatar = document.getElementById('sellerAvatar');
+                    
+                    if (userData.displayName) {
+                        sellerName.textContent = userData.displayName;
+                    } else if (userData.email) {
+                        sellerName.textContent = userData.email.split('@')[0];
+                    }
+                    
+                    if (userData.photoURL) {
+                        sellerAvatar.src = userData.photoURL;
+                    } else if (userData.displayName || userData.email) {
+                        const name = userData.displayName || userData.email.split('@')[0];
+                        sellerAvatar.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=4f46e5&color=fff`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading seller info:', error);
+            }
+        }
+        
+        // Load similar listings
+        async function loadSimilarListings(breed, excludeId) {
+            if (!breed) return;
+            
+            try {
+                const querySnapshot = await db.collection('listings')
+                    .where('breed', '==', breed)
+                    .where('status', '==', 'active')
+                    .limit(4)
+                    .get();
+                
+                const similarListings = [];
+                querySnapshot.forEach(doc => {
+                    if (doc.id !== excludeId) {
+                        similarListings.push({ id: doc.id, ...doc.data() });
+                    }
+                });
+                
+                // If no similar listings found, try to get any active listings
+                if (similarListings.length === 0) {
+                    const otherListings = await db.collection('listings')
+                        .where('status', '==', 'active')
+                        .limit(4)
+                        .get();
+                    
+                    otherListings.forEach(doc => {
+                        if (doc.id !== excludeId) {
+                            similarListings.push({ id: doc.id, ...doc.data() });
+                        }
+                    });
+                }
+                
+                displaySimilarListings(similarListings);
+                
+            } catch (error) {
+                console.error('Error loading similar listings:', error);
+            }
+        }
+        
+        // Display similar listings
+        function displaySimilarListings(listings) {
+            const container = document.getElementById('similarListings');
+            
+            if (listings.length === 0) {
+                container.innerHTML = '<p>No similar listings found.</p>';
+                return;
+            }
+            
+            container.innerHTML = listings.map(listing => `
+                <div class="goat-card">
+                    <div class="goat-image" style="background-image: url('${listing.images && listing.images[0] ? listing.images[0] : 'https://via.placeholder.com/300x200?text=No+Image'}')">
+                        ${listing.status === 'sold' ? '<div class="sold-badge">SOLD</div>' : ''}
+                    </div>
+                    <div class="goat-info">
+                        <h3>${listing.title || 'Goat for Sale'}</h3>
+                        <p class="price">${formatPrice(listing.price || 0)}</p>
+                        <p class="location"><i class="fas fa-map-marker-alt"></i> ${listing.location || 'Location not specified'}</p>
+                        <a href="listing.html?id=${listing.id}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Contact seller functionality
+        document.getElementById('contactSellerBtn').addEventListener('click', () => {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = `login.html?redirect=listing.html?id=${listingId}`;
+                return;
+            }
+            
+            // In a real app, this would open a chat/modal
+            alert('Contact form or chat would open here');
+        });
+        
+        // Save listing functionality
+        document.getElementById('saveListingBtn').addEventListener('click', async () => {
+            const user = auth.currentUser;
+            if (!user) {
+                window.location.href = `login.html?redirect=listing.html?id=${listingId}`;
+                return;
+            }
+            
+            const saveBtn = document.getElementById('saveListingBtn');
+            const icon = saveBtn.querySelector('i');
+            
+            try {
+                // Toggle save state
+                if (icon.classList.contains('fas')) {
+                    // Already saved, remove from saved
+                    await db.collection('users').doc(user.uid).update({
+                        savedListings: firebase.firestore.FieldValue.arrayRemove(listingId)
+                    });
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                } else {
+                    // Not saved, add to saved
+                    await db.collection('users').doc(user.uid).update({
+                        savedListings: firebase.firestore.FieldValue.arrayUnion(listingId)
+                    });
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                }
+            } catch (error) {
+                console.error('Error updating saved listings:', error);
+            }
+        });
+        
+        // Check if user is logged in and update UI
+        auth.onAuthStateChanged((user) => {
+            const accountLink = document.getElementById('accountLink');
+            
+            if (user) {
+                // User is signed in
+                accountLink.textContent = 'My Account';
+                accountLink.href = 'account.html';
+                
+                // Check if listing is saved
+                if (listingId) {
+                    db.collection('users').doc(user.uid).get().then(doc => {
+                        if (doc.exists) {
+                            const userData = doc.data();
+                            const savedListings = userData.savedListings || [];
+                            const saveBtn = document.getElementById('saveListingBtn');
+                            const icon = saveBtn.querySelector('i');
+                            
+                            if (savedListings.includes(listingId)) {
+                                icon.classList.remove('far');
+                                icon.classList.add('fas');
+                            }
+                        }
+                    });
+                }
+            } else {
+                // User is signed out
+                accountLink.textContent = 'Login';
+                accountLink.href = 'login.html';
+            }
+        });
+        
+        // Initialize the page
+        if (listingId) {
+            loadListing();
+        }
+    </script>
+</body>
+</html>

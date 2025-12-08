@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs - Ruminary Exchange</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .faq-container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .faq-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .faq-header h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .faq-header p {
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+        }
+        .search-container input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .search-container input:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        .faq-categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        .category-btn {
+            padding: 0.5rem 1.25rem;
+            border-radius: 9999px;
+            background: #f3f4f6;
+            color: #4b5563;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .category-btn.active, .category-btn:hover {
+            background: #4f46e5;
+            color: white;
+        }
+        .faq-section {
+            margin-bottom: 3rem;
+        }
+        .faq-section h2 {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .faq-question {
+            width: 100%;
+            text-align: left;
+            padding: 1.25rem;
+            background: white;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1f2937;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .faq-question:hover {
+            background: #f9fafb;
+        }
+        .faq-question:after {
+            content: '\002B';
+            font-size: 1.5rem;
+            color: #6b7280;
+            transition: transform 0.2s;
+        }
+        .faq-question.active:after {
+            content: '\2212';
+            transform: rotate(0deg);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background: #f9fafb;
+            padding: 0 1.25rem;
+        }
+        .faq-answer-content {
+            padding: 1.25rem 0;
+            color: #4b5563;
+            line-height: 1.6;
+        }
+        .faq-answer-content p {
+            margin: 0 0 1rem;
+        }
+        .faq-answer-content p:last-child {
+            margin-bottom: 0;
+        }
+        .faq-answer-content ul, .faq-answer-content ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+            padding: 0;
+        }
+        .faq-answer-content li {
+            margin-bottom: 0.5rem;
+        }
+        .help-section {
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        .help-section h2 {
+            font-size: 1.75rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        .help-section p {
+            color: #6b7280;
+            max-width: 600px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #4338ca;
+        }
+        .btn-outline {
+            border: 1px solid #4f46e5;
+            color: #4f46e5;
+            margin-left: 1rem;
+        }
+        .btn-outline:hover {
+            background: #eef2ff;
+        }
+        @media (max-width: 768px) {
+            .faq-header h1 {
+                font-size: 2rem;
+            }
+            .btn-outline {
+                display: block;
+                margin: 1rem 0 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">RUMINARY EXCHANGE</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#goats">Our Goats</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <a href="login.html" class="btn btn-outline" id="loginLink">Login</a>
+                <a href="create-listing.html" class="btn btn-primary">Sell a Goat</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- FAQ Content -->
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find answers to common questions about buying and selling goats on our platform.</p>
+        </div>
+
+        <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="faqSearch" placeholder="Search for questions...">
+        </div>
+
+        <div class="faq-categories">
+            <button class="category-btn active" data-category="all">All Questions</button>
+            <button class="category-btn" data-category="buying">Buying Goats</button>
+            <button class="category-btn" data-category="selling">Selling Goats</button>
+            <button class="category-btn" data-category="payments">Payments & Fees</button>
+            <button class="category-btn" data-category="shipping">Shipping & Delivery</button>
+        </div>
+
+        <div class="faq-section" id="buying-section">
+            <h2>Buying Goats</h2>
+            
+            <div class="faq-item" data-category="buying">
+                <button class="faq-question">How do I buy a goat on Ruminary?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>Buying a goat on Ruminary is simple:</p>
+                        <ol>
+                            <li>Browse available goats using our search and filter options</li>
+                            <li>Click on a listing to view all details</li>
+                            <li>Use the "Contact Seller" button to message the seller with any questions</li>
+                            <li>Once you're ready, you can make an offer or purchase directly if the seller has enabled that option</li>
+                            <li>Arrange payment and pickup/delivery with the seller</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="buying">
+                <button class="faq-question">What should I look for when buying a goat?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>When buying a goat, consider these important factors:</p>
+                        <ul>
+                            <li><strong>Health:</strong> Look for clear eyes, clean nose, shiny coat, and alert behavior</li>
+                            <li><strong>Breed:</strong> Choose a breed that matches your needs (dairy, meat, fiber, or pets)</li>
+                            <li><strong>Age:</strong> Kids, yearlings, and adults have different care requirements</li>
+                            <li><strong>Temperament:</strong> Especially important for pets or family milkers</li>
+                            <li><strong>Purpose:</strong> Ensure the goat meets your specific needs (breeding, milking, etc.)</li>
+                            <li><strong>Health records:</strong> Ask for vaccination and deworming history</li>
+                        </ul>
+                        <p>Don't hesitate to ask the seller for more information or additional photos.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="buying">
+                <button class="faq-question">Can I see the goat before purchasing?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>Yes, we strongly encourage potential buyers to arrange to see the goat in person before completing a purchase. This allows you to:</p>
+                        <ul>
+                            <li>Verify the goat's health and condition</li>
+                            <li>Observe the goat's behavior and temperament</li>
+                            <li>See the living conditions of the animal</li>
+                            <li>Ask the seller questions directly</li>
+                        </ul>
+                        <p>Most sellers are happy to schedule a visit. Always meet in a safe, public location if not at the seller's farm.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="selling-section">
+            <h2>Selling Goats</h2>
+            
+            <div class="faq-item" data-category="selling">
+                <button class="faq-question">How do I list a goat for sale?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>To list a goat for sale on Ruminary:</p>
+                        <ol>
+                            <li>Click "Sell a Goat" in the navigation and sign in to your account</li>
+                            <li>Fill out the listing form with details about your goat (breed, age, price, etc.)</li>
+                            <li>Upload clear, well-lit photos of your goat from multiple angles</li>
+                            <li>Set your location and preferred contact method</li>
+                            <li>Choose whether to enable direct purchases or offers</li>
+                            <li>Review and submit your listing</li>
+                        </ol>
+                        <p>Listings typically go live immediately after submission and review.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="selling">
+                <button class="faq-question">What information should I include in my listing?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>For the best results, include as much of the following information as possible:</p>
+                        <ul>
+                            <li><strong>Basic Information:</strong> Breed, age, sex, weight, and color</li>
+                            <li><strong>Health Details:</strong> Vaccination history, deworming schedule, any health issues</li>
+                            <li><strong>Temperament:</strong> Personality traits and handling experience</li>
+                            <li><strong>Pedigree:</strong> Registration papers if available</li>
+                            <li><strong>Price:</strong> Clear pricing and any terms of sale</li>
+                            <li><strong>Location:</strong> Where the goat is located and any transportation options</li>
+                            <li><strong>High-Quality Photos:</strong> Clear images from multiple angles</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="selling">
+                <button class="faq-question">How do I price my goat?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>Pricing depends on several factors:</p>
+                        <ul>
+                            <li><strong>Breed:</strong> Some breeds command higher prices due to rarity or specific qualities</li>
+                            <li><strong>Age:</strong> Breeding-age animals typically have the highest value</li>
+                            <li><strong>Pedigree:</strong> Registered animals with documented lineage can be priced higher</li>
+                            <li><strong>Training:</strong> Trained animals (for milking, packing, etc.) can command premium prices</li>
+                            <li><strong>Health:</strong> Current health status and veterinary care history</li>
+                            <li><strong>Market Demand:</strong> Local market conditions and seasonality</li>
+                        </ul>
+                        <p>Research similar listings on Ruminary to get an idea of current market prices in your area.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="payments-section">
+            <h2>Payments & Fees</h2>
+            
+            <div class="faq-item" data-category="payments">
+                <button class="faq-question">What payment methods are accepted?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>Payment methods vary by seller, but common options include:</p>
+                        <ul>
+                            <li>Cash (most common for in-person transactions)</li>
+                            <li>Bank transfers</li>
+                            <li>Cashier's checks</li>
+                            <li>Secure payment through Ruminary (coming soon)</li>
+                            <li>Other digital payment services (Venmo, PayPal, etc.)</li>
+                        </ul>
+                        <p>Always confirm payment method with the seller before completing a transaction. Be cautious of potential scams when using digital payment methods.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="payments">
+                <button class="faq-question">Are there any fees for using Ruminary?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>Currently, listing goats on Ruminary is free for basic listings. We may introduce premium listing options in the future with additional visibility features.</p>
+                        <p>For buyers, there are no fees to browse, contact sellers, or purchase goats through our platform.</p>
+                        <p>Note that payment processing fees may apply if you choose to use certain payment methods, and these would be the responsibility of the buyer and seller to work out between themselves.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="shipping-section">
+            <h2>Shipping & Delivery</h2>
+            
+            <div class="faq-item" data-category="shipping">
+                <button class="faq-question">How does shipping work for live animals?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>Shipping live animals requires special consideration:</p>
+                        <ul>
+                            <li><strong>Local Pickup:</strong> Most transactions involve local pickup where the buyer comes to the seller's location</li>
+                            <li><strong>Transport Services:</strong> Some sellers offer or can recommend professional livestock transport services</li>
+                            <li><strong>Health Certificates:</strong> Interstate transport typically requires a health certificate from a licensed veterinarian</li>
+                            <li><strong>Costs:</strong> Buyers are usually responsible for all shipping costs and arrangements</li>
+                        </ul>
+                        <p>Always discuss and agree on shipping arrangements before completing a purchase.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item" data-category="shipping">
+                <button class="faq-question">What should I do to prepare for receiving a shipped goat?</button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        <p>To ensure a smooth transition for your new goat:</p>
+                        <ul>
+                            <li><strong>Prepare a Quarantine Area:</strong> Keep new goats separate from your existing herd for 2-4 weeks</li>
+                            <li><strong>Gather Supplies:</strong> Have feed, water, shelter, and any necessary medications ready</li>
+                            <li><strong>Veterinary Care:</strong> Schedule a health check with your veterinarian shortly after arrival</li>
+                            <li><strong>Diet Transition:</strong> Ask the seller about the goat's current diet to plan a gradual transition</li>
+                            <li><strong>Companionship:</strong> Goats are herd animals - ensure they'll have appropriate company</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h2>Still have questions?</h2>
+            <p>Can't find the answer you're looking for? Our support team is here to help.</p>
+            <div>
+                <a href="contact.html" class="btn btn-primary">Contact Support</a>
+                <a href="index.html#goats" class="btn btn-outline">Browse Goats</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>RUMINARY EXCHANGE</h3>
+                    <p>Your trusted marketplace for quality goats and livestock. Connecting breeders and enthusiasts since 2025.</p>
+                    <div class="social-links" style="justify-content: flex-start; margin-top: 1rem;">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#goats">Browse Goats</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>For Sellers</h4>
+                    <ul>
+                        <li><a href="create-listing.html">Sell a Goat</a></li>
+                        <li><a href="#">Seller Guidelines</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="faq.html">FAQs</a></li>
+                        <li><a href="#">Shipping & Delivery</a></li>
+                        <li><a href="#">Returns & Refunds</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter for the latest updates and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email address" required>
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Ruminary. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="privacy.html">Privacy Policy</a>
+                    <a href="terms.html">Terms of Service</a>
+                    <a href="sitemap.html">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    
+    <!-- Firebase Configuration and App Logic -->
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7draXchRUCkK1Hut1eD-Km1_Y4f_AtCU",
+            authDomain: "goatique-536bd.firebaseapp.com",
+            projectId: "goatique-536bd",
+            storageBucket: "goatique-536bd.firebasestorage.app",
+            messagingSenderId: "63709506575",
+            appId: "1:63709506575:web:864e9369dcf7021859077a",
+            measurementId: "G-63D52N4Z66"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
+        // Update navigation based on auth state
+        auth.onAuthStateChanged((user) => {
+            const loginLink = document.getElementById('loginLink');
+            
+            if (user) {
+                // User is signed in
+                loginLink.textContent = 'My Account';
+                loginLink.href = 'account.html';
+            } else {
+                // User is signed out
+                loginLink.textContent = 'Login';
+                loginLink.href = 'login.html';
+            }
+        });
+
+        // FAQ Accordion Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            // Toggle answer visibility when clicking on a question
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const answer = this.nextElementSibling;
+                    
+                    if (this.classList.contains('active')) {
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    } else {
+                        answer.style.maxHeight = '0';
+                    }
+                    
+                    // Close other open answers
+                    faqQuestions.forEach(item => {
+                        if (item !== this) {
+                            item.classList.remove('active');
+                            item.nextElementSibling.style.maxHeight = '0';
+                        }
+                    });
+                });
+            });
+            
+            // Category filtering
+            const categoryBtns = document.querySelectorAll('.category-btn');
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Update active button
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Show/hide FAQ items based on category
+                    faqItems.forEach(item => {
+                        if (category === 'all' || item.getAttribute('data-category') === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Scroll to the first visible section
+                    const firstVisibleSection = document.querySelector(`#${category}-section`);
+                    if (firstVisibleSection && category !== 'all') {
+                        window.scrollTo({
+                            top: firstVisibleSection.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('faqSearch');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                
+                if (searchTerm.length > 2) {
+                    faqItems.forEach(item => {
+                        const question = item.querySelector('.faq-question').textContent.toLowerCase();
+                        const answer = item.querySelector('.faq-answer-content').textContent.toLowerCase();
+                        
+                        if (question.includes(searchTerm) || answer.includes(searchTerm)) {
+                            item.style.display = 'block';
+                            // Expand matching questions
+                            item.querySelector('.faq-question').classList.add('active');
+                            item.querySelector('.faq-answer').style.maxHeight = item.querySelector('.faq-answer').scrollHeight + 'px';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                } else if (searchTerm.length === 0) {
+                    // Reset when search is cleared
+                    faqItems.forEach(item => {
+                        item.style.display = 'block';
+                        item.querySelector('.faq-question').classList.remove('active');
+                        item.querySelector('.faq-answer').style.maxHeight = '0';
+                    });
+                    
+                    // Reset to 'all' category
+                    document.querySelector('.category-btn[data-category="all"]').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

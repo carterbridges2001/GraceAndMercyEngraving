@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>Page not found — Goatique</title>
+    <meta http-equiv="refresh" content="0; url=/Goatique/" />
+    <script>
+      // SPA-friendly fallback for GitHub Pages: attempt to fetch the app index and render it.
+      (function () {
+        var indexUrl = '/Goatique/index.html';
+        fetch(indexUrl)
+          .then(function (r) { return r.text(); })
+          .then(function (html) {
+            document.open();
+            document.write(html);
+            document.close();
+          })
+          .catch(function () {
+            // If fetch fails, fall back to redirecting to the app root
+            location.replace('/Goatique/');
+          });
+      })();
+    </script>
+  </head>
+  <body>
+    Redirecting to the app...
+  </body>
+</html>

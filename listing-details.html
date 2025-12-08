@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listing Details - Ruminary</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .listing-detail-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: #4f46e5;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .back-link i {
+            margin-right: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        .back-link:hover i {
+            transform: translateX(-4px);
+        }
+        
+        .listing-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .listing-gallery {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: #f9fafb;
+            aspect-ratio: 1 / 1;
+        }
+        
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .thumbnail-container {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+        }
+        
+        .thumbnail {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.375rem;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+        
+        .thumbnail.active, .thumbnail:hover {
+            border-color: #4f46e5;
+        }
+        
+        .listing-info {
+            padding: 1.5rem;
+        }
+        
+        .listing-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .listing-title {
+            font-size: 2rem;
+            color: #1f2937;
+            margin: 0 0 0.5rem 0;
+        }
+        
+        .listing-price {
+            font-size: 1.75rem;
+            color: #1f2937;
+            font-weight: 600;
+            margin: 0 0 1rem 0;
+        }
+        
+        .listing-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .meta-item i {
+            color: #9ca3af;
+        }
+        
+        .listing-description {
+            color: #4b5563;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .details-section {
+            margin-bottom: 2rem;
+        }
+        
+        .details-title {
+            font-size: 1.25rem;
+            color: #1f2937;
+            margin: 0 0 1rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .detail-item {
+            margin-bottom: 0.75rem;
+        }
+        
+        .detail-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: #1f2937;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn-contact {
+            flex: 1;
+            text-align: center;
+            padding: 0.875rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        
+        .btn-outline {
+            background-color: white;
+            color: #4f46e5;
+            border: 1px solid #d1d5db;
+        }
+        
+        .btn-outline:hover {
+            background-color: #f9fafb;
+            border-color: #9ca3af;
+        }
+        
+        @media (max-width: 768px) {
+            .listing-detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">GOATIQUE</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="browse.html" class="active">Browse Goats</a>
+                <a href="about.html">About</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <span id="userGreeting"></span>
+                    <div class="user-dropdown">
+                        <a href="account.html">My Account</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+                <a href="login.html" id="loginBtn" class="btn btn-outline">Login</a>
+                <a href="browse.html" class="btn btn-primary">Shop Now</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="listing-detail-container">
+        <a href="browse.html" class="back-link">
+            <i class="fas fa-arrow-left"></i> Back to Listings
+        </a>
+        
+        <div class="listing-detail-grid">
+            <div class="listing-gallery">
+                <img id="mainImage" src="https://via.placeholder.com/600x600?text=Loading..." alt="Goat" class="main-image">
+                <div class="thumbnail-container" id="thumbnails">
+                    <!-- Thumbnails will be added by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="listing-info">
+                <div class="listing-header">
+                    <h1 id="listingTitle" class="listing-title">Loading...</h1>
+                    <p id="listingPrice" class="listing-price">$0.00</p>
+                    <div class="listing-meta">
+                        <span class="meta-item"><i class="fas fa-map-marker-alt"></i> <span id="listingLocation">Location</span></span>
+                        <span class="meta-item"><i class="fas fa-calendar-alt"></i> Listed: <span id="listingDate">Just now</span></span>
+                        <span class="meta-item"><i class="fas fa-eye"></i> <span id="viewCount">0</span> views</span>
+                    </div>
+                </div>
+                
+                <div class="details-section">
+                    <h3 class="details-title">Description</h3>
+                    <p id="listingDescription" class="listing-description">Loading description...</p>
+                </div>
+                
+                <div class="details-section">
+                    <h3 class="details-title">Details</h3>
+                    <div class="details-grid" id="listingDetails">
+                        <!-- Details will be added by JavaScript -->
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="#contact-seller" class="btn btn-primary btn-contact">
+                        <i class="fas fa-envelope"></i> Contact Seller
+                    </a>
+                    <button class="btn btn-outline">
+                        <i class="far fa-heart"></i> Save to Favorites
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Ruminary</h3>
+                    <p>Premium quality goats for sale. Find your perfect goat today.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="browse.html">Browse Goats</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <p>Email: info@goatique.com</p>
+                    <p>Phone: (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Ruminary. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7draXchRUCkK1Hut1eD-Km1_Y4f_AtCU",
+            authDomain: "goatique-536bd.firebaseapp.com",
+            projectId: "goatique-536bd",
+            storageBucket: "goatique-536bd.appspot.com",
+            messagingSenderId: "63709506575",
+            appId: "1:63709506575:web:864e9369dcf7021859077a",
+            measurementId: "G-63D52N4Z66"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+        const storage = firebase.storage();
+        
+        // Function to format Firebase Storage URLs
+        function getImageUrl(imagePath) {
+            if (!imagePath) return 'https://via.placeholder.com/600x400?text=No+Image';
+            if (imagePath.startsWith('http')) return imagePath;
+            if (imagePath.startsWith('gs://')) {
+                const pathParts = imagePath.split('/');
+                const bucket = pathParts[2];
+                const encodedPath = pathParts.slice(3).map(encodeURIComponent).join('/');
+                return `https://firebasestorage.googleapis.com/v0/b/${bucket}/o/${encodedPath}?alt=media`;
+            }
+            return imagePath;
+        }
+        
+        // Function to format date
+        function formatDate(timestamp) {
+            if (!timestamp) return 'N/A';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // Function to load listing details
+        async function loadListingDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const listingId = urlParams.get('id');
+            
+            if (!listingId) {
+                document.querySelector('.listing-detail-container').innerHTML = `
+                    <div class="error-message" style="text-align: center; padding: 2rem;">
+                        <h2>Listing Not Found</h2>
+                        <p>The requested listing could not be found.</p>
+                        <a href="browse.html" class="btn btn-primary" style="margin-top: 1rem;">Browse Listings</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                const doc = await db.collection('listings').doc(listingId).get();
+                
+                if (!doc.exists) {
+                    throw new Error('Listing not found');
+                }
+                
+                const listing = { id: doc.id, ...doc.data() };
+                
+                // Update view count
+                await db.collection('listings').doc(listingId).update({
+                    views: (listing.views || 0) + 1
+                });
+                
+                // Update the page with listing data
+                document.title = `${listing.title || 'Goat Listing'} | Ruminary`;
+                document.getElementById('listingTitle').textContent = listing.title || 'Goat for Sale';
+                document.getElementById('listingPrice').textContent = listing.price 
+                    ? `$${parseFloat(listing.price).toLocaleString()}` 
+                    : 'Price on Request';
+                document.getElementById('listingLocation').textContent = listing.location || 'Location not specified';
+                document.getElementById('listingDate').textContent = formatDate(listing.createdAt || new Date());
+                document.getElementById('viewCount').textContent = (listing.views || 0) + 1;
+                document.getElementById('listingDescription').textContent = listing.description || 'No description provided.';
+                
+                // Set main image
+                const mainImage = document.getElementById('mainImage');
+                if (listing.images && listing.images.length > 0) {
+                    const mainImageUrl = getImageUrl(listing.images[0]);
+                    mainImage.src = mainImageUrl;
+                    mainImage.alt = listing.title || 'Goat';
+                    
+                    // Add thumbnails
+                    const thumbnailsContainer = document.getElementById('thumbnails');
+                    listing.images.forEach((img, index) => {
+                        const thumbnail = document.createElement('img');
+                        thumbnail.src = getImageUrl(img);
+                        thumbnail.alt = `Thumbnail ${index + 1}`;
+                        thumbnail.className = 'thumbnail' + (index === 0 ? ' active' : '');
+                        thumbnail.onclick = () => {
+                            mainImage.src = getImageUrl(img);
+                            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                            thumbnail.classList.add('active');
+                        };
+                        thumbnailsContainer.appendChild(thumbnail);
+                    });
+                }
+                
+                // Add details
+                const detailsContainer = document.getElementById('listingDetails');
+                const details = [
+                    { label: 'Breed', value: listing.breed || 'N/A' },
+                    { label: 'Age', value: listing.age || 'N/A' },
+                    { label: 'Gender', value: listing.gender || 'N/A' },
+                    { label: 'Color', value: listing.color || 'N/A' },
+                    { label: 'Weight', value: listing.weight ? `${listing.weight} lbs` : 'N/A' },
+                    { label: 'Health Status', value: listing.healthStatus || 'N/A' },
+                    { label: 'Vaccinated', value: listing.vaccinated ? 'Yes' : 'No' },
+                    { label: 'Registered', value: listing.registered ? 'Yes' : 'No' }
+                ];
+                
+                detailsContainer.innerHTML = details.map(detail => `
+                    <div class="detail-item">
+                        <div class="detail-label">${detail.label}</div>
+                        <div class="detail-value">${detail.value}</div>
+                    </div>
+                `).join('');
+                
+                // Update contact button
+                const contactBtn = document.querySelector('.btn-contact');
+                if (contactBtn) {
+                    contactBtn.href = `#contact-seller?listingId=${listingId}`;
+                }
+                
+            } catch (error) {
+                console.error('Error loading listing:', error);
+                document.querySelector('.listing-detail-container').innerHTML = `
+                    <div class="error-message" style="text-align: center; padding: 2rem;">
+                        <h2>Error Loading Listing</h2>
+                        <p>${error.message || 'An error occurred while loading the listing.'}</p>
+                        <a href="browse.html" class="btn btn-primary" style="margin-top: 1rem;">Browse Listings</a>
+                    </div>
+                `;
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check auth state
+            auth.onAuthStateChanged(user => {
+                const userProfile = document.getElementById('userProfile');
+                const loginBtn = document.getElementById('loginBtn');
+                
+                if (user) {
+                    // User is signed in
+                    userProfile.style.display = 'block';
+                    loginBtn.style.display = 'none';
+                    document.getElementById('userGreeting').textContent = `Hi, ${user.displayName || 'User'}`;
+                } else {
+                    // User is signed out
+                    userProfile.style.display = 'none';
+                    loginBtn.style.display = 'inline-block';
+                }
+            });
+            
+            // Logout functionality
+            document.getElementById('logoutBtn')?.addEventListener('click', (e) => {
+                e.preventDefault();
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                });
+            });
+            
+            // Load listing details
+            loadListingDetails();
+        });
+    </script>
+</body>
+</html>

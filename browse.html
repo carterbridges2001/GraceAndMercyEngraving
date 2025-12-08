@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Goats - Ruminary Exchange</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .browse-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .page-header h1 {
+            font-size: 2.5rem;
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        
+        .page-header p {
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .browse-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .search-box {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            background-color: white;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1em;
+        }
+        
+        .listings-section {
+            margin: 3rem 0;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            color: #1f2937;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .section-title i {
+            color: #f59e0b;
+        }
+        
+        .listings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .listing-card {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .listing-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .listing-card.sponsored {
+            border: 1px solid #f59e0b;
+            position: relative;
+        }
+        
+        .sponsored-badge {
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: #f59e0b;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            z-index: 1;
+        }
+        
+        .listing-image {
+            height: 200px;
+            background-color: #f9fafb;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .listing-details {
+            padding: 1.25rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .listing-header {
+            margin-bottom: 0.75rem;
+        }
+        
+        .listing-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 0.25rem;
+            line-height: 1.3;
+        }
+        
+        .listing-location {
+            display: flex;
+            align-items: center;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .listing-location i {
+            margin-right: 0.35rem;
+            font-size: 1rem;
+        }
+        
+        .listing-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin: 0.5rem 0;
+        }
+        
+        .listing-description {
+            color: #4b5563;
+            font-size: 0.9375rem;
+            line-height: 1.5;
+            margin: 0.5rem 0 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .listing-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid #f3f4f6;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .listing-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .listing-meta i {
+            font-size: 1rem;
+        }
+        
+        .btn-view {
+            display: inline-block;
+            background: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .btn-view:hover {
+            background: #4338ca;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        .pagination button {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pagination button:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+        }
+        
+        .pagination button.active {
+            background: #4f46e5;
+            color: white;
+            border-color: #4f46e5;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .no-listings {
+            text-align: center;
+            padding: 4rem 1rem;
+            background: #f9fafb;
+            border-radius: 0.5rem;
+            margin: 2rem 0;
+            grid-column: 1 / -1;
+        }
+        
+        .no-listings i {
+            font-size: 3rem;
+            color: #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        
+        .no-listings h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+        
+        .no-listings p {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .browse-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: 100%;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .listings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">RUMINARY EXCHANGE</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="browse.html" class="active">Browse Goats</a>
+                <a href="about.html">About</a>
+                <a href="faq.html">FAQ</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="nav-actions">
+                <div id="userProfile" class="user-profile" style="display: none;">
+                    <span id="userGreeting"></span>
+                    <div class="user-dropdown">
+                        <a href="account.html">My Account</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+                <a href="login.html" id="loginBtn" class="btn btn-outline">Login</a>
+                <a href="create-listing.html" class="btn btn-primary">Sell a Goat</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="browse-container">
+        <header class="page-header">
+            <h1>Find Your Perfect Goat</h1>
+            <p>Browse through our selection of high-quality goats from trusted breeders. Find your perfect match today!</p>
+        </header>
+        
+        <div class="browse-toolbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search by breed, location, or keywords...">
+            </div>
+            <div class="filter-group">
+                <select class="filter-select" id="breedFilter">
+                    <option value="">All Breeds</option>
+                    <option value="nubian">Nubian</option>
+                    <option value="alpine">Alpine</option>
+                    <option value="saanen">Saanen</option>
+                    <option value="la mancha">La Mancha</option>
+                    <option value="nigerian dwarf">Nigerian Dwarf</option>
+                    <option value="boer">Boer</option>
+                    <option value="pygmy">Pygmy</option>
+                    <option value="toggenburg">Toggenburg</option>
+                    <option value="oberhasli">Oberhasli</option>
+                    <option value="other">Other</option>
+                </select>
+                <select class="filter-select" id="priceFilter">
+                    <option value="">Any Price</option>
+                    <option value="0-200">Under $200</option>
+                    <option value="200-500">$200 - $500</option>
+                    <option value="500-1000">$500 - $1,000</option>
+                    <option value="1000-2000">$1,000 - $2,000</option>
+                    <option value="2000">Over $2,000</option>
+                </select>
+                <select class="filter-select" id="sortBy">
+                    <option value="newest">Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="popular">Most Popular</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Sponsored Listings -->
+        <div class="listings-section">
+            <h2 class="section-title"><i class="fas fa-star"></i> Featured Goats</h2>
+            <div class="listings-grid" id="sponsoredListings">
+                <div class="loading-spinner">Loading featured goats...</div>
+            </div>
+        </div>
+        
+        <!-- All Listings -->
+        <div class="listings-section">
+            <h2 class="section-title">All Goats for Sale</h2>
+            <div class="listings-grid" id="allListings">
+                <div class="loading-spinner">Loading available goats...</div>
+            </div>
+            
+            <div class="no-listings" id="noListings" style="display: none;">
+                <i class="fas fa-kiwi-bird"></i>
+                <h3>No Listings Found</h3>
+                <p>We couldn't find any goats matching your search criteria. Try adjusting your filters or check back later.</p>
+                <a href="#" id="resetFilters" class="btn btn-primary">Reset Filters</a>
+            </div>
+            
+            <div class="pagination" id="pagination">
+                <button id="prevPage" disabled><i class="fas fa-chevron-left"></i></button>
+                <span id="pageNumbers"></span>
+                <button id="nextPage"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Initialize Firebase if not already initialized
+        if (!firebase.apps.length) {
+            const firebaseConfig = {
+                apiKey: "AIzaSyC7draXchRUCkK1Hut1eD-Km1_Y4f_AtCU",
+                authDomain: "goatique-536bd.firebaseapp.com",
+                projectId: "goatique-536bd",
+                storageBucket: "goatique-536bd.appspot.com",
+                messagingSenderId: "63709506575",
+                appId: "1:63709506575:web:864e9369dcf7021859077a",
+                measurementId: "G-63D52N4Z66"
+            };
+            
+            try {
+                firebase.initializeApp(firebaseConfig);
+                console.log('Firebase initialized successfully');
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+            }
+        }
+        
+        // Initialize services
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        
+        // Pagination variables
+        let currentPage = 1;
+        const listingsPerPage = 12;
+        let allListings = [];
+        let filteredListings = [];
+        
+        // DOM Elements
+        const sponsoredListingsEl = document.getElementById('sponsoredListings');
+        const allListingsEl = document.getElementById('allListings');
+        const noListingsEl = document.getElementById('noListings');
+        const searchInput = document.getElementById('searchInput');
+        const breedFilter = document.getElementById('breedFilter');
+        const priceFilter = document.getElementById('priceFilter');
+        const sortBy = document.getElementById('sortBy');
+        const prevPageBtn = document.getElementById('prevPage');
+        const nextPageBtn = document.getElementById('nextPage');
+        const pageNumbersEl = document.getElementById('pageNumbers');
+        const resetFiltersBtn = document.getElementById('resetFilters');
+        
+        // Check authentication state
+        auth.onAuthStateChanged((user) => {
+            const userProfile = document.getElementById('userProfile');
+            const loginBtn = document.getElementById('loginBtn');
+            const userGreeting = document.getElementById('userGreeting');
+            
+            if (user) {
+                // User is signed in
+                document.body.classList.add('logged-in');
+                if (userProfile) userProfile.style.display = 'block';
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (userGreeting) {
+                    userGreeting.textContent = user.displayName || user.email.split('@')[0];
+                }
+            } else {
+                // User is signed out
+                document.body.classList.remove('logged-in');
+                if (userProfile) userProfile.style.display = 'none';
+                if (loginBtn) loginBtn.style.display = 'inline-block';
+            }
+            
+            // Load listings regardless of auth state
+            loadListings();
+        });
+        
+        // Load listings from Firestore
+        async function loadListings() {
+            try {
+                console.log('Starting to load listings...');
+                
+                // Show loading state
+                sponsoredListingsEl.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading featured goats...</div>';
+                allListingsEl.innerHTML = '<div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i> Loading available goats...</div>';
+                
+                // First, try to get a specific listing to test the connection
+                try {
+                    const testDoc = await db.collection('listings').doc('3nCcMFD2ssFPqDabGTeG').get();
+                    if (testDoc.exists) {
+                        console.log('Successfully connected to Firestore. Test document:', testDoc.data());
+                    } else {
+                        console.warn('Test document not found, but connection successful');
+                    }
+                } catch (testError) {
+                    console.error('Error testing Firestore connection:', testError);
+                }
+                
+                // Get all listings
+                console.log('Fetching all listings...');
+                const listingsSnapshot = await db.collection('listings')
+                    // Temporarily remove filters to test
+                    // .where('status', '==', 'active')
+                    // .orderBy('createdAt', 'desc')
+                    .get()
+                    .catch(err => {
+                        console.error('Error in Firestore query:', err);
+                        throw err;
+                    });
+                
+                console.log(`Retrieved ${listingsSnapshot.size} listings`);
+                
+                allListings = [];
+                const sponsored = [];
+                const regular = [];
+                
+                listingsSnapshot.forEach(doc => {
+                    try {
+                        const listing = { id: doc.id, ...doc.data() };
+                        console.log('Processing listing:', listing.id, listing.title);
+                        
+                        // Ensure required fields exist
+                        if (!listing.status) {
+                            listing.status = 'active'; // Default status
+                        }
+                        if (!listing.createdAt) {
+                            listing.createdAt = new Date(); // Default timestamp
+                        }
+                        
+                        allListings.push(listing);
+                        
+                        if (listing.isSponsored) {
+                            sponsored.push(listing);
+                        } else {
+                            regular.push(listing);
+                        }
+                    } catch (docError) {
+                        console.error('Error processing document:', doc.id, docError);
+                    }
+                });
+                
+                console.log(`Found ${sponsored.length} sponsored and ${regular.length} regular listings`);
+                
+                // Display sponsored listings
+                displayListings(sponsored, sponsoredListingsEl);
+                
+                // Filter and display regular listings
+                filterAndDisplayListings();
+                
+            } catch (error) {
+                console.error('Error in loadListings:', error);
+                const errorMessage = error.message || 'Unknown error occurred';
+                console.error('Error details:', error);
+                
+                allListingsEl.innerHTML = `
+                    <div class="error-message" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #ef4444;">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Error loading listings</h3>
+                        <p>${errorMessage}</p>
+                        <p>Please check the console for more details.</p>
+                    </div>`;
+            }
+        }
+        
+        // Filter and display listings based on current filters
+        function filterAndDisplayListings() {
+            // Apply filters
+            filteredListings = [...allListings];
+            
+            // Apply search filter
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm) {
+                filteredListings = filteredListings.filter(listing => 
+                    listing.title.toLowerCase().includes(searchTerm) ||
+                    (listing.description && listing.description.toLowerCase().includes(searchTerm)) ||
+                    (listing.breed && listing.breed.toLowerCase().includes(searchTerm)) ||
+                    (listing.location && listing.location.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            // Apply breed filter
+            const selectedBreed = breedFilter.value;
+            if (selectedBreed) {
+                filteredListings = filteredListings.filter(listing => 
+                    listing.breed && listing.breed.toLowerCase() === selectedBreed.toLowerCase()
+                );
+            }
+            
+            // Apply price filter
+            const priceRange = priceFilter.value;
+            if (priceRange) {
+                const [min, max] = priceRange.split('-').map(Number);
+                filteredListings = filteredListings.filter(listing => {
+                    const price = parseFloat(listing.price) || 0;
+                    if (priceRange.endsWith('+')) {
+                        return price >= min;
+                    }
+                    return price >= min && price <= max;
+                });
+            }
+            
+            // Apply sorting
+            const sortValue = sortBy.value;
+            switch (sortValue) {
+                case 'price-low':
+                    filteredListings.sort((a, b) => (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0));
+                    break;
+                case 'price-high':
+                    filteredListings.sort((a, b) => (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0));
+                    break;
+                case 'popular':
+                    filteredListings.sort((a, b) => (b.views || 0) - (a.views || 0));
+                    break;
+                case 'newest':
+                default:
+                    // Already sorted by newest in the query
+                    break;
+            }
+            
+            // Update pagination
+            updatePagination();
+            
+            // Display current page
+            displayCurrentPage();
+            
+            // Show/hide no listings message
+            if (filteredListings.length === 0) {
+                noListingsEl.style.display = 'block';
+            } else {
+                noListingsEl.style.display = 'none';
+            }
+        }
+        
+        // Update pagination controls
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredListings.length / listingsPerPage);
+            
+            // Update button states
+            prevPageBtn.disabled = currentPage === 1;
+            nextPageBtn.disabled = currentPage >= totalPages;
+            
+            // Generate page numbers
+            let pageNumbers = '';
+            const maxPages = 5; // Maximum number of page buttons to show
+            let startPage, endPage;
+            
+            if (totalPages <= maxPages) {
+                // Show all pages if total pages is less than max
+                startPage = 1;
+                endPage = totalPages;
+            } else {
+                // Calculate start and end pages to show
+                const halfMax = Math.floor(maxPages / 2);
+                
+                if (currentPage <= halfMax + 1) {
+                    // Near the beginning
+                    startPage = 1;
+                    endPage = maxPages;
+                } else if (currentPage >= totalPages - halfMax) {
+                    // Near the end
+                    startPage = totalPages - maxPages + 1;
+                    endPage = totalPages;
+                } else {
+                    // In the middle
+                    startPage = currentPage - halfMax;
+                    endPage = currentPage + halfMax;
+                }
+            }
+            
+            // Generate page number buttons
+            for (let i = startPage; i <= endPage; i++) {
+                if (i > 0 && i <= totalPages) {
+                    pageNumbers += `<button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+                }
+            }
+            
+            // Add ellipsis if needed
+            if (endPage < totalPages) {
+                pageNumbers += `<span>...</span><button onclick="goToPage(${totalPages})">${totalPages}</button>`;
+            }
+            
+            pageNumbersEl.innerHTML = pageNumbers;
+        }
+        
+        // Display current page of listings
+        function displayCurrentPage() {
+            const startIndex = (currentPage - 1) * listingsPerPage;
+            const endIndex = startIndex + listingsPerPage;
+            const currentListings = filteredListings.slice(startIndex, endIndex);
+            
+            displayListings(currentListings, allListingsEl);
+        }
+        
+        // Display listings in the specified container
+        function displayListings(listings, container) {
+            if (listings.length === 0) {
+                container.innerHTML = '<div class="no-listings">No listings found</div>';
+                return;
+            }
+            
+            container.innerHTML = listings.map(listing => createListingCard(listing)).join('');
+            
+            // Add event listeners to view buttons
+            container.querySelectorAll('.view-listing').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const listingId = e.target.closest('a').dataset.id;
+                    window.location.href = `listing-details.html?id=${listingId}`;
+                });
+            });
+        }
+        
+        // Create HTML for a listing card
+        function createListingCard(listing) {
+            const imageUrl = listing.images && listing.images.length > 0 
+                ? listing.images[0] 
+                : 'https://via.placeholder.com/400x300?text=No+Image';
+                
+            const price = listing.price ? `$${parseFloat(listing.price).toLocaleString()}` : 'Price on Request';
+            const location = listing.location || 'Location not specified';
+            const breed = listing.breed ? listing.breed.charAt(0).toUpperCase() + listing.breed.slice(1) : 'Breed not specified';
+            
+            return `
+                <div class="listing-card ${listing.isSponsored ? 'sponsored' : ''}">
+                    ${listing.isSponsored ? '<span class="sponsored-badge">Featured</span>' : ''}
+                    <div class="listing-image" style="background-image: url('${imageUrl}')" onclick="window.location.href='listing-details.html?id=${listing.id}'"></div>
+                    <div class="listing-details">
+                        <div class="listing-header">
+                            <h3 class="listing-title">${listing.title || 'Untitled Listing'}</h3>
+                            <div class="listing-location">
+                                <i class="fas fa-map-marker-alt"></i> ${location}
+                            </div>
+                        </div>
+                        <div class="listing-price">${price}</div>
+                        <div class="listing-breed">Breed: ${breed}</div>
+                        <p class="listing-description">
+                            ${listing.description ? listing.description.substring(0, 100) + (listing.description.length > 100 ? '...' : '') : 'No description provided.'}
+                        </p>
+                        <div class="listing-meta">
+                            <span><i class="far fa-calendar-alt"></i> ${formatDate(listing.createdAt)}</span>
+                            <span><i class="far fa-eye"></i> ${listing.views || 0} views</span>
+                        </div>
+                        <a href="listing-details.html?id=${listing.id}" class="btn-view">View Details</a>
+                    </div>
+                </div>`;
+        }
+        
+        // Format Firestore timestamp to readable date
+        function formatDate(timestamp) {
+            if (!timestamp || !timestamp.seconds) return 'Date not available';
+            
+            const date = new Date(timestamp.seconds * 1000);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        // Navigation functions
+        function goToPage(page) {
+            if (page < 1 || page > Math.ceil(filteredListings.length / listingsPerPage)) return;
+            
+            currentPage = page;
+            displayCurrentPage();
+            updatePagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Event Listeners
+        searchInput.addEventListener('input', () => {
+            currentPage = 1;
+            filterAndDisplayListings();
+        });
+        
+        breedFilter.addEventListener('change', () => {
+            currentPage = 1;
+            filterAndDisplayListings();
+        });
+        
+        priceFilter.addEventListener('change', () => {
+            currentPage = 1;
+            filterAndDisplayListings();
+        });
+        
+        sortBy.addEventListener('change', () => {
+            currentPage = 1;
+            filterAndDisplayListings();
+        });
+        
+        prevPageBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        });
+        
+        nextPageBtn.addEventListener('click', () => {
+            if (currentPage < Math.ceil(filteredListings.length / listingsPerPage)) {
+                goToPage(currentPage + 1);
+            }
+        });
+        
+        resetFiltersBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            searchInput.value = '';
+            breedFilter.value = '';
+            priceFilter.value = '';
+            sortBy.value = 'newest';
+            currentPage = 1;
+            filterAndDisplayListings();
+        });
+        
+        // Make goToPage available globally for pagination buttons
+        window.goToPage = goToPage;
+    </script>
+</body>
+</html>
