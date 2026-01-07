@@ -399,6 +399,72 @@ body.logged-in #userProfile {
     background-color: #f5f5f5;
 }
 
+/* Mobile-friendly adjustments and prominent CTA */
+/* Ensure header/nav wraps and CTA becomes full-width on small devices */
+@media (max-width: 600px) {
+    .navbar .container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+        padding: 10px 16px;
+    }
+
+    .nav-links {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        order: 2;
+        margin-top: 6px;
+        flex-wrap: wrap;
+    }
+
+    .nav-actions {
+        width: 100%;
+        order: 1;
+        display: flex;
+        justify-content: center;
+        padding: 6px 0;
+    }
+
+    /* Make the Get a Quote CTA very visible on phones */
+    .nav-actions .btn-primary {
+        width: 100%;
+        max-width: 420px;
+        padding: 14px 18px;
+        font-size: 1.05rem;
+        border-radius: 999px;
+        box-shadow: 0 8px 24px rgba(93,64,55,0.18);
+    }
+
+    .logo-img {
+        height: 44px;
+    }
+
+    .hero {
+        height: calc(100vh - 120px);
+        padding-top: 10px;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        padding: 0 12px;
+    }
+}
+
+/* Extra small phones */
+@media (max-width: 400px) {
+    .nav-actions .btn-primary {
+        padding: 12px 14px;
+        font-size: 0.95rem;
+    }
+}
+
 .item-card h3 {
     padding: 20px 20px 10px;
     font-size: 1.3rem;
