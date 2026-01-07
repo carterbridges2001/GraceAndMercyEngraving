@@ -400,42 +400,31 @@ body.logged-in #userProfile {
 }
 
 /* Mobile-friendly adjustments and prominent CTA */
-/* Ensure header/nav wraps and CTA becomes full-width on small devices */
 @media (max-width: 600px) {
     .navbar .container {
         display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
         align-items: center;
         padding: 10px 16px;
     }
 
+    /* Keep the CTA aligned to the right on phones (like the original layout)
+       but make it slightly larger and more noticeable without taking full width. */
     .nav-links {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 16px;
-        order: 2;
-        margin-top: 6px;
-        flex-wrap: wrap;
+        display: none; /* hide secondary links to mimic compact header on phones */
     }
 
     .nav-actions {
-        width: 100%;
-        order: 1;
+        margin-left: auto;
         display: flex;
-        justify-content: center;
-        padding: 6px 0;
+        align-items: center;
+        gap: 8px;
     }
 
-    /* Make the Get a Quote CTA very visible on phones */
     .nav-actions .btn-primary {
-        width: 100%;
-        max-width: 420px;
-        padding: 14px 18px;
-        font-size: 1.05rem;
-        border-radius: 999px;
-        box-shadow: 0 8px 24px rgba(93,64,55,0.18);
+        padding: 12px 18px;
+        font-size: 0.95rem;
+        border-radius: 28px;
+        box-shadow: 0 8px 20px rgba(93,64,55,0.15);
     }
 
     .logo-img {
@@ -443,8 +432,8 @@ body.logged-in #userProfile {
     }
 
     .hero {
-        height: calc(100vh - 120px);
-        padding-top: 10px;
+        height: calc(100vh - 88px);
+        padding-top: 6px;
     }
 
     .hero h1 {
@@ -454,6 +443,27 @@ body.logged-in #userProfile {
     .hero p {
         font-size: 1rem;
         padding: 0 12px;
+    }
+}
+
+/* Ensure CTA cannot be hidden by other elements on very small screens */
+@media (max-width: 600px) {
+    .navbar {
+        z-index: 9999; /* keep the header above everything */
+    }
+
+    .navbar .container {
+        overflow: visible; /* allow CTA shadows to show */
+    }
+
+    .nav-actions {
+        display: flex !important;
+        visibility: visible !important;
+    }
+
+    .nav-actions .btn-primary {
+        display: inline-block !important;
+        opacity: 1 !important;
     }
 }
 
